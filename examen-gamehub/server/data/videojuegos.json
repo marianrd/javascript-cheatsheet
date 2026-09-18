@@ -1,0 +1,467 @@
+{
+  "PC": [
+    {
+      "id": 1,
+      "nombre": "Cyber Legends 2077",
+      "desarrollador": "Neon Studios",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg",
+      "descripcion": "Un RPG de acción futurista ambientado en una metrópolis cyberpunk. Explora un mundo abierto lleno de decisiones morales, combate intenso y narrativas complejas mientras personalizas tu personaje con mejoras cibernéticas.",
+      "año": 2023,
+      "genero": "RPG",
+      "calificacion": 9.2,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Expansión Neon Nights",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "Nueva zona urbana, 15 misiones principales, 3 armas exclusivas",
+          "precio": "$29.99",
+          "descripcion": "Sumérgete en los distritos más peligrosos de la ciudad."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Intel i7-9700K / AMD Ryzen 7 3700X",
+        "memoria": "16 GB RAM",
+        "grafica": "NVIDIA RTX 3070 / AMD RX 6700 XT",
+        "almacenamiento": "80 GB espacio disponible"
+      },
+      "modos_juego": ["Un jugador", "Multijugador cooperativo", "Modo historia"],
+      "caracteristicas": [
+        "Mundo abierto",
+        "Personalización profunda",
+        "Múltiples finales",
+        "Gráficos de última generación"
+      ]
+    },
+    {
+      "id": 5,
+      "nombre": "Space Command: Galactic War",
+      "desarrollador": "Stellar Games",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/281990/header.jpg",
+      "descripcion": "Comanda tu flota espacial en batallas épicas entre las estrellas. Construye naves, gestiona recursos y lidera a tu facción hacia la dominación galáctica.",
+      "año": 2024,
+      "genero": "Estrategia",
+      "calificacion": 9.0,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Facciones Alienígenas",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "3 nuevas facciones jugables, 25 unidades únicas, campaña adicional",
+          "precio": "$34.99",
+          "descripcion": "Juega como facciones alienígenas con tecnologías completamente diferentes."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Intel i5-10400 / AMD Ryzen 5 3600",
+        "memoria": "8 GB RAM",
+        "grafica": "NVIDIA GTX 1660 / AMD RX 580",
+        "almacenamiento": "40 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Un jugador",
+        "Multijugador online",
+        "Modo campaña",
+        "Batallas personalizadas"
+      ],
+      "caracteristicas": [
+        "Combate táctico",
+        "Construcción de bases",
+        "Diplomacia compleja",
+        "Gráficos espaciales impresionantes"
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Mystery Mansion: The Haunted Case",
+      "desarrollador": "Puzzle Masters",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/304240/header.jpg",
+      "descripcion": "Resuelve el misterio de la mansión embrujada. Explora habitaciones llenas de pistas, resuelve puzzles complejos y descubre la verdad detrás de los eventos sobrenaturales.",
+      "año": 2023,
+      "genero": "Puzzle",
+      "calificacion": 8.5,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Expansión: El Ala Prohibida",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "Nueva sección de la mansión, 15 puzzles adicionales, nueva historia",
+          "precio": "$16.99",
+          "descripcion": "Accede al ala prohibida de la mansión donde los secretos más oscuros esperan."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Intel i3-8100 / AMD Ryzen 3 2200G",
+        "memoria": "4 GB RAM",
+        "grafica": "NVIDIA GTX 1050 / AMD RX 560",
+        "almacenamiento": "15 GB espacio disponible"
+      },
+      "modos_juego": ["Un jugador", "Modo historia", "Modo puzzle libre"],
+      "caracteristicas": [
+        "Puzzles desafiantes",
+        "Atmósfera inmersiva",
+        "Historia no lineal",
+        "Gráficos detallados"
+      ]
+    }
+  ],
+  "PlayStation": [
+    {
+      "id": 2,
+      "nombre": "Fantasy Quest: The Last Kingdom",
+      "desarrollador": "Epic Fantasy Games",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/header.jpg",
+      "descripcion": "Embárcate en una épica aventura de fantasía medieval. Lucha contra dragones, explora castillos antiguos y forja alianzas mientras decides el destino del reino.",
+      "año": 2022,
+      "genero": "RPG",
+      "calificacion": 8.9,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Armas Legendarias",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "5 armas únicas, 3 sets de armaduras épicas, efectos visuales exclusivos",
+          "precio": "$14.99",
+          "descripcion": "Desbloquea armas legendarias forjadas por los maestros herreros del reino."
+        },
+        {
+          "nombre": "Expansión: Tierras del Norte",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "Nueva región explorable, 10 misiones de historia, nuevos enemigos",
+          "precio": "$24.99",
+          "descripcion": "Viaja a las gélidas tierras del norte donde antiguos secretos esperan ser descubiertos."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "PS5: AMD Zen 2 personalizado",
+        "memoria": "16 GB GDDR6",
+        "grafica": "AMD RDNA 2",
+        "almacenamiento": "65 GB espacio disponible"
+      },
+      "modos_juego": ["Un jugador", "Modo historia", "Arenas de combate"],
+      "caracteristicas": [
+        "Mundo abierto masivo",
+        "Sistema de combate dinámico",
+        "Historia no lineal",
+        "Gráficos 4K"
+      ]
+    },
+    {
+      "id": 6,
+      "nombre": "Street Fighter Legends",
+      "desarrollador": "Fighting Masters Inc",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1364780/header.jpg",
+      "descripcion": "El juego de lucha definitivo con los mejores luchadores del mundo. Domina combos devastadores, aprende técnicas especiales y compite en torneos globales.",
+      "año": 2023,
+      "genero": "Lucha",
+      "calificacion": 8.8,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Luchadores Clásicos",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "8 luchadores retro, 5 escenarios nostálgicos, música clásica",
+          "precio": "$24.99",
+          "descripcion": "Vuelve a los orígenes con luchadores icónicos de las primeras entregas."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "PS5: AMD Zen 2 personalizado",
+        "memoria": "16 GB GDDR6",
+        "grafica": "AMD RDNA 2",
+        "almacenamiento": "35 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Un jugador",
+        "Multijugador local",
+        "Multijugador online",
+        "Modo torneo",
+        "Modo arcade"
+      ],
+      "caracteristicas": [
+        "40+ luchadores",
+        "Combos complejos",
+        "Gráficos 4K 60fps",
+        "Netcode mejorado"
+      ]
+    },
+    {
+      "id": 10,
+      "nombre": "Soccer Pro 2024",
+      "desarrollador": "Sports Interactive",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2195250/header.jpg",
+      "descripcion": "El simulador de fútbol más completo y realista. Gestiona tu equipo, compite en ligas internacionales y vive la emoción del deporte rey.",
+      "año": 2024,
+      "genero": "Deportes",
+      "calificacion": 9.1,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Liga de Campeones Pro",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "Torneo exclusivo, 20 equipos adicionales, modo carrera mejorado",
+          "precio": "$29.99",
+          "descripcion": "Participa en el torneo más prestigioso del mundo."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "PS5: AMD Zen 2 personalizado",
+        "memoria": "16 GB GDDR6",
+        "grafica": "AMD RDNA 2",
+        "almacenamiento": "45 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Un jugador",
+        "Multijugador online",
+        "Modo carrera",
+        "Partidos rápidos",
+        "Modo torneo"
+      ],
+      "caracteristicas": [
+        "Más de 500 equipos",
+        "Física realista",
+        "Gráficos 4K",
+        "Modo multijugador competitivo"
+      ]
+    }
+  ],
+  "Xbox": [
+    {
+      "id": 3,
+      "nombre": "Racing Extreme: Velocity",
+      "desarrollador": "Speed Demon Studios",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1551360/header.jpg",
+      "descripcion": "La experiencia de carreras más realista y emocionante. Compite en circuitos legendarios alrededor del mundo con más de 200 vehículos licenciados.",
+      "año": 2024,
+      "genero": "Carreras",
+      "calificacion": 9.5,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Coches Clásicos",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "15 vehículos clásicos restaurados, 5 circuitos retro, modo carrera histórica",
+          "precio": "$19.99",
+          "descripcion": "Revive la era dorada de las carreras con una colección exclusiva de autos clásicos."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Xbox Series X: AMD Zen 2 personalizado",
+        "memoria": "16 GB GDDR6",
+        "grafica": "AMD RDNA 2",
+        "almacenamiento": "50 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Un jugador",
+        "Multijugador online",
+        "Carreras rápidas",
+        "Carrera de campeonato"
+      ],
+      "caracteristicas": [
+        "Física realista",
+        "Más de 200 vehículos",
+        "30+ circuitos",
+        "Modo multijugador competitivo"
+      ]
+    },
+    {
+      "id": 7,
+      "nombre": "Zombie Apocalypse: Survival",
+      "desarrollador": "Horror Studios",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/550/header.jpg",
+      "descripcion": "Sobrevive en un mundo post-apocalíptico lleno de zombies. Construye refugios, busca recursos, fabrica armas y forma equipo con otros supervivientes.",
+      "año": 2022,
+      "genero": "Supervivencia",
+      "calificacion": 8.6,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Expansión: La Ciudad Perdida",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "Nueva zona urbana, 12 misiones de historia, nuevos tipos de zombies",
+          "precio": "$29.99",
+          "descripcion": "Explora los restos de una gran metrópolis donde los secretos del apocalipsis esperan ser descubiertos."
+        },
+        {
+          "nombre": "Pack de Armas de Supervivencia",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "15 armas artesanales, herramientas de construcción mejoradas, trampas",
+          "precio": "$14.99",
+          "descripcion": "Aumenta tus posibilidades de supervivencia con armas y herramientas especiales."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Xbox Series X: AMD Zen 2 personalizado",
+        "memoria": "16 GB GDDR6",
+        "grafica": "AMD RDNA 2",
+        "almacenamiento": "55 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Un jugador",
+        "Multijugador cooperativo",
+        "Modo supervivencia",
+        "Modo historia"
+      ],
+      "caracteristicas": [
+        "Construcción de bases",
+        "Crafting avanzado",
+        "Mundo persistente",
+        "Multijugador cooperativo"
+      ]
+    },
+    {
+      "id": 12,
+      "nombre": "Call of Duty: Modern Warfare Elite",
+      "desarrollador": "Infinity Ward",
+      "imagen": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1938090/header.jpg",
+      "descripcion": "La experiencia de combate táctico más intensa. Combate en escenarios realistas con armas auténticas, gráficos fotorrealistas y una campaña cinematográfica.",
+      "año": 2024,
+      "genero": "Shooter",
+      "calificacion": 9.4,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Mapas Multiplayer",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "8 mapas nuevos, 4 modos de juego adicionales, nuevas armas",
+          "precio": "$24.99",
+          "descripcion": "Amplía tu experiencia multijugador con mapas diseñados para diferentes estilos de juego."
+        },
+        {
+          "nombre": "Campaña Especial: Operación Shadow",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "Nueva campaña de 8 misiones, nuevos personajes, armas exclusivas",
+          "precio": "$34.99",
+          "descripcion": "Vive una nueva campaña épica que continúa la historia principal."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Xbox Series X: AMD Zen 2 personalizado",
+        "memoria": "16 GB GDDR6",
+        "grafica": "AMD RDNA 2",
+        "almacenamiento": "120 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Un jugador",
+        "Multijugador online",
+        "Modo batalla",
+        "Modo zombies",
+        "Campaña"
+      ],
+      "caracteristicas": [
+        "Gráficos fotorrealistas",
+        "Campo de batalla masivo",
+        "Más de 50 armas",
+        "Modo multijugador competitivo"
+      ]
+    }
+  ],
+  "Nintendo": [
+    {
+      "id": 4,
+      "nombre": "Adventure Island: Tropical Paradise",
+      "desarrollador": "Nintendo Dream Team",
+      "imagen": "https://media.rawg.io/media/resize/1280/-/games/c31/c31655ab2640da333f5ca3f223d33a12.jpg",
+      "descripcion": "Una aventura colorida y divertida en una isla tropical llena de secretos. Resuelve puzzles, explora cuevas misteriosas y ayuda a los habitantes locales.",
+      "año": 2023,
+      "genero": "Aventura",
+      "calificacion": 8.7,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Trajes Especiales",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "10 trajes temáticos, efectos especiales únicos, emotes exclusivos",
+          "precio": "$9.99",
+          "descripcion": "Personaliza tu personaje con trajes inspirados en las diferentes culturas de la isla."
+        },
+        {
+          "nombre": "Expansión: Islas Secretas",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "3 nuevas islas, 20 misiones adicionales, nuevos personajes",
+          "precio": "$19.99",
+          "descripcion": "Descubre islas secretas escondidas en el archipiélago."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Nintendo Switch: NVIDIA Tegra X1",
+        "memoria": "4 GB RAM",
+        "grafica": "NVIDIA Maxwell",
+        "almacenamiento": "8 GB espacio disponible"
+      },
+      "modos_juego": ["Un jugador", "Multijugador local", "Modo cooperativo", "Modo historia"],
+      "caracteristicas": [
+        "Gráficos coloridos",
+        "Mundo abierto explorable",
+        "Puzzles desafiantes",
+        "Multijugador familiar"
+      ]
+    },
+    {
+      "id": 8,
+      "nombre": "Mario Kart: Cosmic Racing",
+      "desarrollador": "Nintendo EPD",
+      "imagen": "https://media.rawg.io/media/resize/1280/-/games/6f8/6f846e941c78cfbabe53cd67e55ced83.jpg",
+      "descripcion": "Las carreras más locas ahora en el espacio. Compite con tus personajes favoritos en circuitos intergalácticos llenos de power-ups, trampas y diversión sin límites.",
+      "año": 2024,
+      "genero": "Carreras",
+      "calificacion": 9.3,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Circuitos Espaciales",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "8 nuevos circuitos temáticos espaciales, 4 personajes exclusivos, nuevos power-ups",
+          "precio": "$19.99",
+          "descripcion": "Lleva las carreras a otro nivel con circuitos que desafían la gravedad."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Nintendo Switch: NVIDIA Tegra X1",
+        "memoria": "4 GB RAM",
+        "grafica": "NVIDIA Maxwell",
+        "almacenamiento": "12 GB espacio disponible"
+      },
+      "modos_juego": [
+        "Multijugador local",
+        "Multijugador online",
+        "Modo gran premio",
+        "Carreras rápidas"
+      ],
+      "caracteristicas": [
+        "Hasta 8 jugadores locales",
+        "50+ personajes",
+        "40+ circuitos",
+        "Gráficos mejorados"
+      ]
+    },
+    {
+      "id": 11,
+      "nombre": "Animal Crossing: Dream Island",
+      "desarrollador": "Nintendo EPD",
+      "imagen": "https://media.rawg.io/media/resize/1280/-/games/42f/42fe1abd4d7c11ca92d93a0fb0f8662b.jpg",
+      "descripcion": "Crea tu propia isla paradisíaca y vive la vida que siempre soñaste. Personaliza tu hogar, haz amigos con los animales locales y disfruta de actividades relajantes.",
+      "año": 2023,
+      "genero": "Simulación",
+      "calificacion": 9.0,
+      "dlcs_incluidos": [
+        {
+          "nombre": "Pack de Decoración Premium",
+          "tipo": "Contenido Descargable",
+          "contenido_adicional": "200+ objetos decorativos exclusivos, nuevos estilos de muebles, efectos especiales",
+          "precio": "$12.99",
+          "descripcion": "Transforma tu isla con objetos decorativos exclusivos."
+        },
+        {
+          "nombre": "Expansión: Islas Vecinas",
+          "tipo": "Expansión de Contenido",
+          "contenido_adicional": "5 nuevas islas visitables, 30 nuevos personajes, actividades adicionales",
+          "precio": "$24.99",
+          "descripcion": "Visita islas vecinas llenas de nuevos amigos y actividades."
+        }
+      ],
+      "requisitos_sistema": {
+        "procesador": "Nintendo Switch: NVIDIA Tegra X1",
+        "memoria": "4 GB RAM",
+        "grafica": "NVIDIA Maxwell",
+        "almacenamiento": "10 GB espacio disponible"
+      },
+      "modos_juego": ["Un jugador", "Multijugador local", "Multijugador online", "Modo creativo"],
+      "caracteristicas": [
+        "Personalización completa",
+        "Mundo abierto",
+        "Multijugador social",
+        "Gráficos encantadores"
+      ]
+    }
+  ]
+}

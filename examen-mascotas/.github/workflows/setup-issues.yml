@@ -1,0 +1,196 @@
+# Crea issues de la actividad para repos creados desde Classmoji.
+# Idempotente: crea solamente los issues faltantes por titulo.
+name: Setup assignment issues
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+  repository_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: setup-issues-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  ensure-assignment-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear issues faltantes de la actividad
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 << 'PY'
+          import json
+          import os
+          import textwrap
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          REPO = os.environ["GITHUB_REPOSITORY"]
+          TOKEN = os.environ["GITHUB_TOKEN"]
+          API = "https://api.github.com"
+          ISSUE_LABEL = "classroom-assignment"
+
+          ISSUES = [
+              {
+                  "title": "[Entrega 1] Vincular CSS y JS al HTML",
+                  "body": """
+          ## Objetivo
+          Conectar la hoja de estilos y el script de JavaScript al archivo `index.html`.
+
+          ## Qué debe cumplirse
+          - [ ] Dentro de `<head>`, existe una etiqueta `<link>` que vincula `css/styles.css`.
+          - [ ] En `index.html`, existe una etiqueta `<script>` que vincula `js/script.js` (como módulo o con defer).
+
+          ## Commit sugerido
+          ```
+          feat(html): vincular css y script js al html
+
+          Closes #1
+          ```""",
+              },
+              {
+                  "title": "[Entrega 2] Consumir API de Mascotas con fetch",
+                  "body": """
+          ## Objetivo
+          Realizar peticiones asíncronas con `fetch` o `async/await` al servidor local de Adopción de Mascotas.
+
+          ## Qué debe cumplirse
+          - [ ] En `js/script.js`, consultar el catálogo completo en `http://localhost:3000/api/animales`.
+          - [ ] Consultar los refugios en `/api/refugios` y las especies en `/api/especies`.
+          - [ ] Manejar respuestas con `try...catch` y capturar posibles errores de conexión.
+
+          ## Commit sugerido
+          ```
+          feat(js): consumir api de mascotas con fetch y async await
+
+          Closes #2
+          ```""",
+              },
+              {
+                  "title": "[Entrega 3] Renderizar catálogo de animales y filtros en el DOM",
+                  "body": """
+          ## Objetivo
+          Poblar dinámicamente el grid de tarjetas de animales y los `<select>` de filtros.
+
+          ## Qué debe cumplirse
+          - [ ] Renderizar las tarjetas en `#catalogoGrid` con nombre, raza, edad, refugio, etiquetas e imagen HD.
+          - [ ] Poblar las opciones del selector de especies `#filtroEspecie`.
+          - [ ] Poblar las opciones del selector de refugios `#filtroRefugio`.
+
+          ## Commit sugerido
+          ```
+          feat(js): renderizar tarjetas de animales y filtros en el dom
+
+          Closes #3
+          ```""",
+              },
+              {
+                  "title": "[Entrega 4] Implementar filtrado por especie y modal de ficha de adopción",
+                  "body": """
+          ## Objetivo
+          Implementar filtrado por especie y apertura del modal con la ficha de adopción.
+
+          ## Qué debe cumplirse
+          - [ ] Escuchar cambios en `#filtroEspecie` para filtrar los animales visibles en el catálogo.
+          - [ ] Al hacer click en el botón de adopción de una tarjeta, abrir `#modalDetalle` con la ficha completa del animal y el formulario `#formAdopcion`.
+
+          ## Commit sugerido
+          ```
+          feat(js): implementar filtrado y ficha de adopcion
+
+          Closes #4
+          ```""",
+              },
+              {
+                  "title": "[Entrega 5] Persistir y gestionar solicitudes de adopción en LocalStorage",
+                  "body": """
+          ## Objetivo
+          Guardar las solicitudes de adopción en `localStorage`, mostrarlas en pantalla y permitir su limpieza.
+
+          ## Qué debe cumplirse
+          - [ ] Al enviar `#formAdopcion`, guardar la solicitud en `localStorage` bajo la clave `'adopcion_solicitudes'` con `JSON.stringify()`.
+          - [ ] Al cargar la página, recuperar las solicitudes con `localStorage.getItem()` y `JSON.parse()` y renderizarlas en `#solicitudesLista`.
+          - [ ] Al hacer click en `#btnLimpiarSolicitudes`, eliminar las solicitudes con `localStorage.removeItem()` o `clear()`.
+
+          ## Commit sugerido
+          ```
+          feat(js): persistir y gestionar solicitudes en localstorage
+
+          Closes #5
+          ```""",
+              },
+          ]
+
+          for _spec in ISSUES:
+              _spec["body"] = textwrap.dedent(_spec["body"]).strip()
+
+          def request(method, url, data=None):
+              headers = {
+                  "Authorization": f"Bearer {TOKEN}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              }
+              body = None
+              if data is not None:
+                  headers["Content-Type"] = "application/json; charset=utf-8"
+                  body = json.dumps(data).encode("utf-8")
+              req = urllib.request.Request(url, data=body, method=method, headers=headers)
+              with urllib.request.urlopen(req) as resp:
+                  return json.loads(resp.read().decode())
+
+          def list_existing_issue_titles():
+              titles = set()
+              page = 1
+              while True:
+                  url = f"{API}/repos/{REPO}/issues?state=all&per_page=100&page={page}"
+                  headers = {
+                      "Authorization": f"Bearer {TOKEN}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  }
+                  req = urllib.request.Request(url, headers=headers)
+                  try:
+                      with urllib.request.urlopen(req) as resp:
+                          issues = json.loads(resp.read().decode())
+                  except urllib.error.HTTPError as err:
+                      if err.code == 404:
+                          return titles
+                      raise
+                  if not issues:
+                      break
+                  for item in issues:
+                      if "pull_request" not in item:
+                          titles.add(item.get("title", "").strip())
+                  page += 1
+              return titles
+
+          def main():
+              existing_titles = list_existing_issue_titles()
+              for issue in ISSUES:
+                  if issue["title"] in existing_titles:
+                      print(f"Saltando issue existente: {issue['title']}")
+                      continue
+                  payload = {
+                      "title": issue["title"],
+                      "body": issue["body"],
+                      "labels": [ISSUE_LABEL],
+                  }
+                  try:
+                      created = request("POST", f"{API}/repos/{REPO}/issues", payload)
+                      print(f"Creado issue #{created.get('number')}: {issue['title']}")
+                  except urllib.error.HTTPError as err:
+                      print(f"Error creando '{issue['title']}': HTTP {err.code}")
+
+          if __name__ == "__main__":
+              main()
+          PY

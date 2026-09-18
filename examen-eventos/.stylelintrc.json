@@ -1,0 +1,22 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "color-function-notation": null,
+    "alpha-value-notation": null,
+    "comment-empty-line-before": null,
+    "selector-id-pattern": null,
+    "selector-class-pattern": null,
+    "declaration-block-no-duplicate-properties": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "property-no-unknown": true,
+    "selector-type-no-unknown": true,
+    "no-duplicate-selectors": true,
+    "no-empty-source": null
+  },
+  "ignoreFiles": [
+    "**/*.js",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**"
+  ]
+}

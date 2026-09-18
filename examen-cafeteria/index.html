@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>titulo</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <div class="cafeteria-container">
+      <header>
+        <h1>☕ Origen &amp; Grano</h1>
+        <p class="subtitle">
+          Cafetería de especialidad, métodos de filtrado y pastelería artesanal
+        </p>
+      </header>
+
+      <section class="filters">
+        <select id="filtroCategoria" class="filter-select">
+          <option value="">Todas las categorías</option>
+        </select>
+        <input
+          type="text"
+          id="inputBusqueda"
+          class="search-input"
+          placeholder="Buscar por nombre o notas de cata..."
+        />
+      </section>
+
+      <section class="catalog">
+        <!--
+          Plantilla de tarjeta de producto (.producto-card) para #catalogoGrid.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          producto de la carta. Mapeo de categoria -> clase del badge:
+            bebidas-calientes -> cat-caliente
+            bebidas-frias     -> cat-frio
+            filtrados         -> cat-filtrado
+            bakery            -> cat-bakery
+
+          <div class="producto-card" data-id="${producto.id}">
+            <div class="card-image-wrap">
+              <img src="${producto.imagen}" alt="${producto.nombre}" class="card-image" />
+              <span class="card-cat-badge cat-${claseCategoria}">${producto.categoriaNombre}</span>
+              <span class="card-price-badge">$${producto.precioBase}</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">${producto.nombre}</h3>
+              <p class="card-origin"><i class="fas fa-map-marker-alt"></i> ${producto.origenGrano}</p>
+              <p class="card-description">${producto.descripcion}</p>
+              <div class="card-tags">
+                ${producto.notasCata.map(nota => `<span class="tag">${nota}</span>`).join('')}
+              </div>
+              <button type="button" class="btn-primary btn-ordenar" data-id="${producto.id}">
+                <i class="fas fa-mug-hot"></i> Ordenar Producto
+              </button>
+            </div>
+          </div>
+
+          Si no hay productos (por ejemplo tras filtrar/buscar sin resultados):
+
+          <p class="empty-state">No se encontraron productos.</p>
+        -->
+        <div id="catalogoGrid" class="cards-grid"></div>
+      </section>
+
+      <!-- Modal Personalizar y Armar Pedido -->
+      <div id="modalDetalle" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>☕ Registrar Comanda</h3>
+            <button type="button" class="cerrar-modal">&times;</button>
+          </div>
+
+          <!--
+            <div class="detail-header-info" data-id="${producto.id}" data-precio-base="${producto.precioBase}">
+              <img src="${producto.imagen}" alt="${producto.nombre}" class="detail-img" />
+              <div>
+                <span class="card-cat-badge cat-${claseCategoria}">${producto.categoriaNombre}</span>
+                <h3 class="card-title">${producto.nombre}</h3>
+                <p class="card-origin"><i class="fas fa-map-marker-alt"></i> ${producto.origenGrano}</p>
+                <div class="detail-meta-grid">
+                  <div class="detail-meta-item"><strong>Precio base:</strong> $${producto.precioBase}</div>
+                  <div class="detail-meta-item"><strong>Intensidad:</strong> ${producto.intensidad}/5</div>
+                  <div class="detail-meta-item"><strong>Preparación:</strong> ${producto.tiempoPreparacionMin} min</div>
+                  <div class="detail-meta-item"><strong>Alérgenos:</strong> ${producto.alergenos.length ? producto.alergenos.join(', ') : 'Ninguno'}</div>
+                </div>
+              </div>
+            </div>
+            <p class="card-description">${producto.descripcion}</p>
+            <div class="card-tags">
+              ${producto.notasCata.map(nota => `<span class="tag">${nota}</span>`).join('')}
+            </div>
+          -->
+          <div id="detalleContent" class="detail-body"></div>
+
+          <form id="formPedido" class="order-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cantidadProducto">Cantidad de Unidades</label>
+                <input
+                  type="number"
+                  id="cantidadProducto"
+                  name="cantidad"
+                  min="1"
+                  max="10"
+                  value="1"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="inputCliente">Nombre del Cliente</label>
+                <input
+                  type="text"
+                  id="inputCliente"
+                  name="cliente"
+                  required
+                  placeholder="Ej: Marcos Pérez"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputNotas">Notas Especiales (Opcional)</label>
+              <input
+                type="text"
+                id="inputNotas"
+                name="notas"
+                placeholder="Ej: Con leche vegetal, sin azúcar"
+              />
+            </div>
+
+            <div class="total-bar">
+              <span>Total a Pagar:</span>
+              <strong id="precioTotalCalculado">$0</strong>
+            </div>
+
+            <button type="submit" id="btnConfirmarPedido" class="btn-primary">
+              <i class="fas fa-check-circle"></i> Confirmar Comanda
+            </button>
+          </form>
+          <button type="button" class="btn-cerrar cerrar-modal">Cerrar</button>
+        </div>
+      </div>
+
+      <!-- Sección Historial de Comandas -->
+      <section class="pedidos-section">
+        <div class="pedidos-header">
+          <h2><i class="fas fa-receipt"></i> Comandas Registradas</h2>
+          <button type="button" id="btnLimpiarPedidos" class="btn-outline">
+            <i class="fas fa-trash"></i> Limpiar Historial
+          </button>
+        </div>
+
+        <!--
+          Plantilla de comanda (.pedido-card) para #pedidosLista.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          pedido guardado en localStorage bajo la clave 'cafeteria_pedidos'.
+
+          <div class="pedido-card">
+            <div class="pedido-info">
+              <h4>${pedido.productoNombre} x${pedido.cantidad}</h4>
+              <p>
+                ${pedido.cliente} · ${new Date(pedido.fecha).toLocaleString()}
+                ${pedido.notas ? `· ${pedido.notas}` : ''}
+              </p>
+            </div>
+            <div class="pedido-total">$${pedido.total}</div>
+          </div>
+
+          Si no hay comandas registradas:
+
+          <p class="empty-state">Todavía no registraste ninguna comanda.</p>
+        -->
+        <div id="pedidosLista" class="pedidos-list"></div>
+      </section>
+    </div>
+
+    <script type="module" src="js/script.js"></script>
+  </body>
+</html>

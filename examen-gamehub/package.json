@@ -1,0 +1,33 @@
+{
+  "name": "examen-js-gamehub",
+  "version": "1.0.0",
+  "description": "Examen de Frontend con JavaScript - Catálogo de Videojuegos GameHub",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "bash scripts/classroom-check.sh all",
+    "test:link": "bash scripts/classroom-check.sh link-css-js",
+    "test:fetch": "bash scripts/classroom-check.sh fetch-api",
+    "test:render": "bash scripts/classroom-check.sh render-dom",
+    "test:events": "bash scripts/classroom-check.sh events-logic",
+    "test:storage": "bash scripts/classroom-check.sh storage-history",
+    "lint": "eslint . && stylelint \"**/*.css\"",
+    "lint:fix": "eslint . --fix && stylelint \"**/*.css\" --fix",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"**/*.css\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.2.5",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}

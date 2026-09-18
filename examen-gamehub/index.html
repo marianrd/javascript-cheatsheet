@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameHub - Examen de JavaScript</title>
+  <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+<div class="gamehub-container">
+  <header>
+    <h1>🎮 GameHub</h1>
+    <p class="subtitle">Tu catálogo de videojuegos favoritos</p>
+  </header>
+
+  <section class="filters">
+    <select id="filtroPlataforma" class="filter-select">
+      <option value="">Todas las plataformas</option>
+    </select>
+    <select id="ordenarCalificacion" class="filter-select">
+      <option value="">Sin ordenar</option>
+      <option value="desc">Mayor a menor calificación</option>
+      <option value="asc">Menor a mayor calificación</option>
+    </select>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 📋 PLANTILLA SUGERIDA PARA RENDERIZAR CADA TARJETA EN catalogoGrid: -->
+  <!--
+    <div class="game-card" data-id="${juego.id}">
+      <img src="${juego.imagen}" alt="${juego.nombre}" />
+      <div class="game-card-body">
+        <h3>${juego.nombre}</h3>
+        <p class="developer">${juego.desarrollador}</p>
+        <div class="meta">
+          <div>
+            <span class="badge badge-platform">${juego.plataforma}</span>
+            <span class="badge badge-genre">${juego.genero}</span>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <span>${juego.calificacion}</span>
+          </div>
+          <button type="button" class="btn-fav ${esFavorito ? 'active' : ''}" data-id="${juego.id}" title="Favorito">
+            <i class="${esFavorito ? 'fas' : 'far'} fa-star"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  -->
+  <!-- ========================================================================= -->
+
+  <section class="catalog">
+    <div id="catalogoGrid" class="games-grid"></div>
+  </section>
+
+  <!-- Modal Detalle -->
+  <div id="modalDetalle" class="modal hidden">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>📋 Detalle del Juego</h3>
+        <button type="button" class="cerrar-modal">&times;</button>
+      </div>
+
+      <!-- ======================================================================= -->
+      <!-- 📋 PLANTILLA PARA COPIAR Y PEGAR EN JS (Detalle del juego en modal):    -->
+      <!--
+        <img src="${juego.imagen}" alt="${juego.nombre}" />
+        <h2>${juego.nombre}</h2>
+        <div class="detail-meta">
+          <span class="badge badge-platform">${juego.plataforma}</span>
+          <span class="badge badge-genre">${juego.genero}</span>
+          <span class="badge"><i class="fas fa-star" style="color:var(--star)"></i> ${juego.calificacion}</span>
+          <span class="badge">${juego.año || 2024}</span>
+        </div>
+        <p>${juego.descripcion}</p>
+      -->
+      <!-- ======================================================================= -->
+
+      <div id="detalleContent" class="detail-body"></div>
+      <button type="button" class="btn-cerrar cerrar-modal">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Sección Favoritos -->
+  <section class="favorites-section">
+    <div class="favorites-header">
+      <h2><i class="fas fa-star"></i> Mis Favoritos</h2>
+      <button type="button" id="btnLimpiarFavoritos" class="btn-outline">
+        <i class="fas fa-trash"></i> Limpiar
+      </button>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 📋 PLANTILLA PARA COPIAR Y PEGAR EN JS (Item de favorito guardado):     -->
+    <!--
+      <div class="fav-item">
+        <div>
+          <span><strong>${fav.nombre}</strong></span>
+          <span class="fav-platform"> &bull; ${fav.plataforma} &bull; <i class="fas fa-star" style="color:var(--star)"></i> ${fav.calificacion}</span>
+        </div>
+        <button type="button" class="btn-outline btn-quitar-fav" data-id="${fav.id}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    -->
+    <!-- ======================================================================= -->
+
+    <div id="favoritosLista" class="favorites-list"></div>
+  </section>
+</div>
+
+<script type="module" src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{
+  "eventos": [
+    {
+      "id": 1,
+      "nombre": "Estadio World Tour",
+      "artista": "Dua Lipa",
+      "fecha": "2026-11-15",
+      "ubicacion": "Estadio Nacional",
+      "precio": 85.5,
+      "imagen": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500",
+      "genero": "Pop",
+      "descripcion": "El gran cierre de su exitosa gira mundial. Una noche llena de luces, coreografías y sus grandes éxitos.",
+      "invitados": ["Angèle", "Tove Lo"],
+      "tickets_disponibles": 12000
+    },
+    {
+      "id": 2,
+      "nombre": "Rock en la Ciudad",
+      "artista": "Arctic Monkeys",
+      "fecha": "2026-10-02",
+      "ubicacion": "Parque de los Eventos",
+      "precio": 120.0,
+      "imagen": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=500",
+      "genero": "Rock Indie",
+      "descripcion": "Presentación exclusiva de su décimo álbum de estudio con un setlist inolvidable.",
+      "invitados": ["The Strokes", "Fontaines D.C."],
+      "tickets_disponibles": 500
+    },
+    {
+      "id": 3,
+      "nombre": "Electrónica Sunrise",
+      "artista": "Calvin Harris",
+      "fecha": "2026-12-05",
+      "ubicacion": "Playa del Sol",
+      "precio": 90.0,
+      "imagen": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=500",
+      "genero": "Electrónica",
+      "descripcion": "Fiesta ininterrumpida hasta el amanecer en la arena. Lineup de clase mundial.",
+      "invitados": ["Tiësto", "Peggy Gou"],
+      "tickets_disponibles": 8000
+    },
+    {
+      "id": 4,
+      "nombre": "Acústico Íntimo",
+      "artista": "Ed Sheeran",
+      "fecha": "2026-09-20",
+      "ubicacion": "Teatro Gran Meliá",
+      "precio": 150.0,
+      "imagen": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=500",
+      "genero": "Pop Acústico",
+      "descripcion": "Un show sin banda completa, solo Ed, su guitarra acústica y una pedalera.",
+      "invitados": ["Maisie Peters"],
+      "tickets_disponibles": 0
+    },
+    {
+      "id": 5,
+      "nombre": "Festival Urbano Trap",
+      "artista": "Bad Bunny",
+      "fecha": "2026-08-14",
+      "ubicacion": "Arena Movistar",
+      "precio": 130.0,
+      "imagen": "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=500",
+      "genero": "Urbano / Reggaeton",
+      "descripcion": "El rey del trap latino aterriza con un show que promete durar más de 3 horas.",
+      "invitados": ["J Balvin", "Feid"],
+      "tickets_disponibles": 150
+    },
+    {
+      "id": 6,
+      "nombre": "Orquesta de las Galaxias",
+      "artista": "London Symphony Orchestra",
+      "fecha": "2026-07-10",
+      "ubicacion": "Teatro Colón",
+      "precio": 65.0,
+      "imagen": "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500",
+      "genero": "Clásica / Bandas Sonoras",
+      "descripcion": "Revive las magistrales composiciones de John Williams ejecutadas por la LSO.",
+      "invitados": [],
+      "tickets_disponibles": 400
+    }
+  ]
+}

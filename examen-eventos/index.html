@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>titulo</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="eventos-container">
+      <header>
+        <h1>🎵 Eventos</h1>
+        <p class="subtitle">Descubrí los mejores shows y conseguí tus entradas</p>
+      </header>
+
+      <section class="filters">
+        <select id="filtroGenero" class="filter-select">
+          <option value="">Todos los géneros</option>
+        </select>
+        <input
+          type="text"
+          id="inputBusqueda"
+          class="search-input"
+          placeholder="Buscar por artista o evento..."
+        />
+      </section>
+
+      <section class="catalog">
+        <!--
+          Plantilla de tarjeta de evento (.event-card) para #eventosGrid.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          evento del catálogo.
+
+          El id de género que devuelve /api/generos es un slug derivado del
+          nombre (minúsculas, espacios/"/" -> "-"), pero cada evento trae
+          `genero` con el nombre original ("Pop", "Rock Indie", etc.). Para
+          comparar contra el <option value="..."> de #filtroGenero hay que
+          generar el mismo slug del lado del cliente, por ejemplo:
+
+            const claseGenero = evento.genero.toLowerCase().replace(/[\s/]+/g, '-');
+
+          <div class="event-card" data-id="${evento.id}">
+            <img src="${evento.imagen}" alt="${evento.nombre}" />
+            <div class="event-card-body">
+              <span class="badge badge-genre">${evento.genero}</span>
+              <h3>${evento.nombre}</h3>
+              <p class="artist">${evento.artista}</p>
+              <div class="event-info">
+                <p><i class="fas fa-calendar"></i> ${new Date(evento.fecha).toLocaleDateString()}</p>
+                <p><i class="fas fa-map-marker-alt"></i> ${evento.ubicacion}</p>
+              </div>
+              <div class="event-meta">
+                <span class="price">$${evento.precio}</span>
+                ${
+                  evento.tickets_disponibles === 0
+                    ? '<span class="badge badge-sold-out">Agotado</span>'
+                    : evento.tickets_disponibles < 500
+                      ? '<span class="badge badge-low-stock">Últimas entradas</span>'
+                      : '<span class="badge badge-available">Disponible</span>'
+                }
+              </div>
+              <button
+                type="button"
+                class="btn-comprar"
+                data-id="${evento.id}"
+                ${evento.tickets_disponibles === 0 ? 'disabled' : ''}
+              >
+                <i class="fas fa-ticket-alt"></i>
+                ${evento.tickets_disponibles === 0 ? 'Agotado' : 'Comprar'}
+              </button>
+            </div>
+          </div>
+
+          Si no hay eventos (por ejemplo tras filtrar/buscar sin resultados):
+
+          <p class="empty-state">No se encontraron eventos.</p>
+        -->
+        <div id="eventosGrid" class="events-grid"></div>
+      </section>
+
+      <!-- Modal Compra -->
+      <div id="modalCompra" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>🎟️ Comprar Entradas</h3>
+            <button type="button" class="cerrar-modal">&times;</button>
+          </div>
+          <!--
+            Plantilla del evento seleccionado para #compraContent.
+            #compraContent ya tiene la clase .purchase-body, así que este
+            bloque se appendea directo adentro (sin div envolvente extra).
+            Se arma con el evento que devuelve GET /api/eventos/:id al
+            clickear "Comprar". El data-precio en el contenedor raíz sirve
+            para leer el precio unitario al calcular el total sin volver a
+            pedirlo a la API.
+
+            <h4 data-id="${evento.id}" data-precio="${evento.precio}">${evento.nombre}</h4>
+            <p class="purchase-artist">${evento.artista}</p>
+            <p class="purchase-details">
+              <i class="fas fa-calendar"></i> ${new Date(evento.fecha).toLocaleDateString()}
+            </p>
+            <p class="purchase-details">
+              <i class="fas fa-map-marker-alt"></i> ${evento.ubicacion}
+            </p>
+            <p class="purchase-price">Precio unitario: $${evento.precio}</p>
+          -->
+          <div id="compraContent" class="purchase-body"></div>
+          <form id="formCompra" class="purchase-form">
+            <div class="form-group">
+              <label for="cantidadEntradas">Cantidad de entradas</label>
+              <input type="number" id="cantidadEntradas" min="1" max="10" value="1" required />
+            </div>
+            <div class="total-section">
+              <span>Total a pagar:</span>
+              <strong id="totalPagar">$0.00</strong>
+            </div>
+            <button type="submit" id="btnConfirmar" class="btn-primary">
+              <i class="fas fa-ticket-alt"></i> Confirmar Compra
+            </button>
+          </form>
+          <button type="button" class="btn-cerrar cerrar-modal">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Sección Historial de Compras -->
+      <section class="history-section">
+        <div class="history-header">
+          <h2><i class="fas fa-receipt"></i> Mis Compras</h2>
+          <button type="button" id="btnLimpiarHistorial" class="btn-outline">
+            <i class="fas fa-trash"></i> Limpiar
+          </button>
+        </div>
+        <!--
+          Plantilla de compra (.history-item) para #historialLista.
+          #historialLista es un <ul>, así que cada entrada tiene que ser un
+          <li> (no un <div>). Copiar dentro de un template literal, una por
+          cada compra guardada en localStorage bajo la clave
+          'eventos_compras'.
+
+          <li class="history-item">
+            <div>
+              <p class="item-event">${compra.evento} x${compra.cantidad}</p>
+              <p class="item-detail">${compra.artista} · ${new Date(compra.fecha).toLocaleString()}</p>
+            </div>
+            <span class="item-total">$${compra.total}</span>
+          </li>
+
+          Si no hay compras registradas:
+
+          <li class="empty-state">Todavía no compraste ninguna entrada.</li>
+        -->
+        <ul id="historialLista" class="history-list"></ul>
+      </section>
+    </div>
+
+    <script type="module" src="./js/script.js"></script>
+  </body>
+</html>
