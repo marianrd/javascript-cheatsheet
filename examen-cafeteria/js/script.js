@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = 'http://localhost:3000';
 const STORAGE_KEY = 'cafeteria_pedidos';
 
 const filtroCategoria = document.getElementById('filtroCategoria');
@@ -11,7 +11,6 @@ const cantidadProducto = document.getElementById('cantidadProducto');
 const inputCliente = document.getElementById('inputCliente');
 const inputNotas = document.getElementById('inputNotas');
 const precioTotalCalculado = document.getElementById('precioTotalCalculado');
-const btnConfirmarPedido = document.getElementById('btnConfirmarPedido');
 const pedidosLista = document.getElementById('pedidosLista');
 const btnLimpiarPedidos = document.getElementById('btnLimpiarPedidos');
 const btnCerrarModal = document.querySelectorAll('.cerrar-modal');
@@ -21,46 +20,46 @@ let todosProductos = [];
 let categorias = [];
 
 let pedidos = [];
-let productoSeleccionado = null;
+let productoActual = null;
 
 async function obtenerProductos() {
-    try {
-      const response = await fetch(`${API_URL}/api/productos`);
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  try {
+    const response = await fetch(`${API_URL}/api/productos`);
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 async function obtenerProductoPorId(id) {
-    try {
-      const response = await fetch(`${API_URL}/api/productos/${id}`);
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  try {
+    const response = await fetch(`${API_URL}/api/productos/${id}`);
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 async function obtenerCategorias() {
-    try {
-      const response = await fetch(`${API_URL}/api/categorias`);
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  try {
+    const response = await fetch(`${API_URL}/api/categorias`);
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 function renderizarProductos() {
-    catalogoGrid.innerHTML = '';
-    productos.forEach(producto => {
-        const entry = document.createElement('div');
-        entry.innerHTML = `
+  catalogoGrid.innerHTML = '';
+  productos.forEach((producto) => {
+    const entry = document.createElement('div');
+    entry.innerHTML = `
         <div class="producto-card" data-id="${producto.id}">
             <div class="card-image-wrap">
               <img src="${producto.imagen}" alt="${producto.nombre}" class="card-image" />
@@ -80,23 +79,29 @@ function renderizarProductos() {
             </div>
           </div>
         `;
-        catalogoGrid.append(entry);
-    })
+    catalogoGrid.append(entry);
+  });
 }
 
 function renderizarCategorias() {
-    categorias.forEach(categoria => {
-        const entry = document.createElement('option')
-        entry.value = categoria.id;
-        entry.textContent = categoria.nombre;
-        filtroCategoria.appendChild(entry);
-    })
+  categorias.forEach((categoria) => {
+    const entry = document.createElement('option');
+    entry.value = categoria.id;
+    entry.textContent = categoria.nombre;
+    filtroCategoria.appendChild(entry);
+  });
 }
 
 async function abrirModal(id) {
-    modalDetalle.classList.remove('hidden');
-    const producto = await obtenerProductoPorId(id);
-    detalleContent.innerHTML = `
+  modalDetalle.classList.remove('hidden');
+  const producto = await obtenerProductoPorId(id);
+  if (!producto) {
+    detalleContent.innerHTML = '<p>No se pudo cargar el producto. Intentá nuevamente.</p>';
+    return;
+  }
+  productoActual = producto;
+  cantidadProducto.value = 1;
+  detalleContent.innerHTML = `
       <div class="detail-header-info" data-id="${producto.id}" data-precio-base="${producto.precioBase}">
               <img src="${producto.imagen}" alt="${producto.nombre}" class="detail-img" />
               <div>
@@ -116,103 +121,100 @@ async function abrirModal(id) {
               ${producto.notasCata.map((nota) => `<span class="tag">${nota}</span>`).join('')}
             </div>
     `;
-    const precio = producto.precioBase;
-    const unidades = cantidadProducto.value;
-    const precioTotal = precio * unidades;
-    precioTotalCalculado.textContent = `$${precioTotal}`;
+  const precio = producto.precioBase;
+  const unidades = Number(cantidadProducto.value);
+  const precioTotal = precio * unidades;
+  precioTotalCalculado.textContent = `$${precioTotal}`;
 }
 
 function aplicarFiltros() {
-    const categoria = filtroCategoria.value;
-    const query = inputBusqueda.value.toLowerCase();
+  const categoria = filtroCategoria.value;
+  const query = inputBusqueda.value.toLowerCase();
 
-    productos = todosProductos.filter((producto) => {
-        const coincideCategoria = !categoria || producto.categoria === categoria;
-        const coincideBusqueda = producto.nombre.toLowerCase().includes(query);
-        return coincideCategoria && coincideBusqueda;
-    });
+  productos = todosProductos.filter((producto) => {
+    const coincideCategoria = !categoria || producto.categoria === categoria;
+    const coincideBusqueda = producto.nombre.toLowerCase().includes(query);
+    return coincideCategoria && coincideBusqueda;
+  });
 
-    if (!categoria && !query) {
-      productos = todosProductos;
-    }
+  if (!categoria && !query) {
+    productos = todosProductos;
+  }
 
-    renderizarProductos();
+  renderizarProductos();
 }
 
 filtroCategoria.addEventListener('change', aplicarFiltros);
 inputBusqueda.addEventListener('input', aplicarFiltros);
 
 catalogoGrid.addEventListener('click', async (e) => {
-    const btn = e.target.closest('.btn-ordenar');
-    if (!btn) return;
+  const btn = e.target.closest('.btn-ordenar');
+  if (!btn) return;
 
-    const productoId = btn.dataset.id;
-    await abrirModal(productoId);
-    productoSeleccionado = productoId;
+  const productoId = btn.dataset.id;
+  await abrirModal(productoId);
 });
 
-formPedido.addEventListener('submit', async (e) => {
-    e.preventDefault();
+formPedido.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!productoActual) return;
 
-    const nombreCliente = inputCliente.value;
-    const notasEspeciales = inputNotas.value;
+  const nombreCliente = inputCliente.value;
+  const notasEspeciales = inputNotas.value;
+  const unidades = Number(cantidadProducto.value);
+  const precioTotal = productoActual.precioBase * unidades;
 
-    const producto = await obtenerProductoPorId(productoSeleccionado);
-    const precio = producto.precioBase;
-    const unidades = cantidadProducto.value;
-    const precioTotal = precio * unidades;
+  const pedido = {
+    id: productoActual.id,
+    productoNombre: productoActual.nombre,
+    cliente: nombreCliente,
+    cantidad: unidades,
+    notas: notasEspeciales,
+    total: precioTotal,
+    fecha: new Date().toLocaleDateString(),
+  };
 
-    const pedido = {
-        id: producto.id,
-        productoNombre: producto.nombre,
-        cliente: nombreCliente,
-        cantidad: unidades,
-        notas: notasEspeciales,
-        total: precioTotal,
-        fecha: new Date().toLocaleDateString(),
-    };
-
-    pedidos.push(pedido);
-    guardarPedidos();
-    modalDetalle.classList.add('hidden');
-    renderizarHistorial();
+  pedidos.push(pedido);
+  guardarPedidos();
+  modalDetalle.classList.add('hidden');
+  formPedido.reset();
+  productoActual = null;
+  renderizarHistorial();
 });
 
-cantidadProducto.addEventListener('input', async (e) => {
-    const producto = await obtenerProductoPorId(productoSeleccionado);
-    const precio = producto.precioBase;
-    const unidades = cantidadProducto.value;
-    const precioTotal = precio * unidades;
-    precioTotalCalculado.textContent = `$${precioTotal}`;
-})
+cantidadProducto.addEventListener('input', () => {
+  if (!productoActual) return;
+  const precio = productoActual.precioBase;
+  const unidades = Number(cantidadProducto.value);
+  const precioTotal = precio * unidades;
+  precioTotalCalculado.textContent = `$${precioTotal}`;
+});
 
 function guardarPedidos() {
-    if (pedidos.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(pedidos));
-    }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(pedidos));
 }
 
 function cargarPedidos() {
-    if (localStorage.getItem(STORAGE_KEY)) {
-        pedidos = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    } else {
-        pedidos = [];
-    }
+  if (localStorage.getItem(STORAGE_KEY)) {
+    pedidos = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  } else {
+    pedidos = [];
+  }
 }
 
 function limpiarPedidos() {
-    if (localStorage.getItem(STORAGE_KEY)) {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-    pedidos = [];
-    renderizarHistorial();
+  if (localStorage.getItem(STORAGE_KEY)) {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+  pedidos = [];
+  renderizarHistorial();
 }
 
 function renderizarHistorial() {
-    pedidosLista.innerHTML = '';
-    pedidos.forEach(pedido => {
-      const entry = document.createElement('div');
-      entry.innerHTML = `
+  pedidosLista.innerHTML = '';
+  pedidos.forEach((pedido) => {
+    const entry = document.createElement('div');
+    entry.innerHTML = `
       <div class="pedido-card">
             <div class="pedido-info">
               <h4>${pedido.productoNombre} x${pedido.cantidad}</h4>
@@ -223,29 +225,28 @@ function renderizarHistorial() {
             </div>
             <div class="pedido-total">$${pedido.total}</div>
           </div>`;
-      pedidosLista.appendChild(entry);
-    })
+    pedidosLista.appendChild(entry);
+  });
 }
 
 btnCerrarModal.forEach((btnCerrar) => {
-  btnCerrar.addEventListener('click', e => {
+  btnCerrar.addEventListener('click', () => {
     modalDetalle.classList.add('hidden');
-  })
-})
+  });
+});
 
-btnLimpiarPedidos.addEventListener('click', e => {
-    limpiarPedidos();
-    renderizarHistorial();
+btnLimpiarPedidos.addEventListener('click', () => {
+  limpiarPedidos();
 });
 
 async function init() {
-    todosProductos = await obtenerProductos();
-    productos = todosProductos;
-    categorias = await obtenerCategorias();
-    renderizarCategorias();
-    renderizarProductos();
-    cargarPedidos();
-    renderizarHistorial();
+  todosProductos = await obtenerProductos();
+  productos = todosProductos;
+  categorias = await obtenerCategorias();
+  renderizarCategorias();
+  renderizarProductos();
+  cargarPedidos();
+  renderizarHistorial();
 }
 
 init();

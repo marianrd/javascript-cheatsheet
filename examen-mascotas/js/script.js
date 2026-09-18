@@ -14,36 +14,45 @@ const modalDetalle = document.getElementById('modalDetalle');
 const formAdopcion = document.getElementById('formAdopcion');
 const inputNombreAdoptante = document.getElementById('inputNombreAdoptante');
 const inputTelefono = document.getElementById('inputTelefono');
-const btnConfirmarAdopcion = document.getElementById('btnConfirmarAdopcion');
 const solicitudesLista = document.getElementById('solicitudesLista');
 const btnLimpiarSolicitudes = document.getElementById('btnLimpiarSolicitudes');
 const detalleContent = document.getElementById('detalleContent');
-const btnCerrarModal = document.querySelectorAll('.cerrar-modal')
-const btnAdoptar = document.querySelectorAll('.btn-adoptar');
 
 async function obtenerMascotas() {
+  try {
     const response = await fetch(`${API_URL}/api/animales`);
-    const json = await response.json();
-    return json;
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 async function obtenerEspecies() {
+  try {
     const response = await fetch(`${API_URL}/api/especies`);
-    const json = await response.json();
-    return json;
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 async function obtenerMascotaPorId(id) {
+  try {
     const response = await fetch(`${API_URL}/api/animales/${id}`);
-    const json = await response.json();
-    return json;
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 function renderizarCatalogo() {
-    catalogoGrid.innerHTML = '';
-    mascotas.forEach(animal => {
-        const entry = document.createElement('div');
-        entry.innerHTML = `
+  catalogoGrid.innerHTML = '';
+  mascotas.forEach((animal) => {
+    const entry = document.createElement('div');
+    entry.innerHTML = `
         <div class="animal-card">
           <div class="card-image-wrap">
             <img src="${animal.imagen}" alt="${animal.nombre}" class="card-image" />
@@ -60,16 +69,20 @@ function renderizarCatalogo() {
             </button>
           </div>
         </div>`;
-        catalogoGrid.appendChild(entry);
-    });
+    catalogoGrid.appendChild(entry);
+  });
 }
 
 async function renderizarModal(id) {
-    modalDetalle.classList.remove('hidden');
-    const animal = await obtenerMascotaPorId(id);
-    detalleContent.innerHTML = ``;
-    const entry = document.createElement('div');
-    entry.innerHTML = `
+  modalDetalle.classList.remove('hidden');
+  const animal = await obtenerMascotaPorId(id);
+  if (!animal) {
+    detalleContent.innerHTML = '<p>No se pudo cargar la ficha del animal. Intentá nuevamente.</p>';
+    return;
+  }
+  detalleContent.innerHTML = '';
+  const entry = document.createElement('div');
+  entry.innerHTML = `
     <div class="detail-header-info">
               <img src="${animal.imagen}" alt="${animal.nombre}" class="detail-img" />
               <div>
@@ -85,114 +98,117 @@ async function renderizarModal(id) {
             <div class="detail-history">
               <strong>Historia:</strong> ${animal.historia}
             </div>`;
-    detalleContent.appendChild(entry);
+  detalleContent.appendChild(entry);
 }
 
 function renderizarSelector() {
-    especies.forEach(especie => {
-      const entry = document.createElement('option');
-      entry.value = especie.id;
-      entry.textContent = especie.nombre;
-      filtroEspecie.appendChild(entry);
-    });
+  especies.forEach((especie) => {
+    const entry = document.createElement('option');
+    entry.value = especie.id;
+    entry.textContent = especie.nombre;
+    filtroEspecie.appendChild(entry);
+  });
 }
 
 function cerrarModal() {
-    modalDetalle.classList.add('hidden');
+  modalDetalle.classList.add('hidden');
 }
 
 function guardarHistorial() {
-    if (solicitudes.length > 0) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(solicitudes))
-    }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(solicitudes));
 }
 
 function cargarHistorial() {
-    const res = localStorage.getItem(STORAGE_KEY);
-    solicitudes = res ? JSON.parse(res) : [];
+  const res = localStorage.getItem(STORAGE_KEY);
+  solicitudes = res ? JSON.parse(res) : [];
 }
 
 function renderizarHistorial() {
-    solicitudesLista.innerHTML = '';
-    solicitudes.forEach(sol => {
-        const entry = document.createElement('div');
-        entry.innerHTML = `<div class="solicitud-card">
+  solicitudesLista.innerHTML = '';
+  solicitudes.forEach((sol) => {
+    const entry = document.createElement('div');
+    entry.innerHTML = `<div class="solicitud-card">
             <div class="solicitud-info">
               <h4>🐾 Solicitud para: ${sol.animalNombre} (${sol.especie})</h4>
               <p><strong>Solicitante:</strong> ${sol.solicitante} &bull; <strong>Tel:</strong> ${sol.telefono} &bull; <strong>Fecha:</strong> ${sol.fecha}</p>
             </div>
             <span class="solicitud-badge">En Revisión</span>
           </div>`;
-        solicitudesLista.appendChild(entry);
-    })
+    solicitudesLista.appendChild(entry);
+  });
 }
 
 function limpiarHistorial() {
-    solicitudes = [];
-    localStorage.removeItem(STORAGE_KEY);
+  solicitudes = [];
+  localStorage.removeItem(STORAGE_KEY);
 }
 
 catalogoGrid.addEventListener('click', async (e) => {
-    const tg = e.target.closest('.btn-adoptar');
-    if (tg) {
-        const animalId = tg.dataset.id;
-        animalSeleccionado = tg.dataset.id;
-        await renderizarModal(animalId);
-    }
+  const tg = e.target.closest('.btn-adoptar');
+  if (tg) {
+    const animalId = tg.dataset.id;
+    animalSeleccionado = tg.dataset.id;
+    await renderizarModal(animalId);
+  }
 });
 
 modalDetalle.addEventListener('click', (e) => {
-    const tg = e.target.closest('.cerrar-modal');
-    if (tg) {
-      cerrarModal();
-    }
-})
+  const tg = e.target.closest('.cerrar-modal');
+  if (tg) {
+    cerrarModal();
+  }
+});
 
 function filtrarEspecie(id) {
-    mascotas = id ? todasMascotas.filter(objeto => objeto.especie === id) : todasMascotas;
-    renderizarCatalogo();
+  mascotas = id ? todasMascotas.filter((objeto) => objeto.especie === id) : todasMascotas;
+  renderizarCatalogo();
 }
 
-filtroEspecie.addEventListener('change', (e) => {
-    const especieSeleccionada = filtroEspecie.value;
-    filtrarEspecie(especieSeleccionada);
+filtroEspecie.addEventListener('change', () => {
+  const especieSeleccionada = filtroEspecie.value;
+  filtrarEspecie(especieSeleccionada);
 });
 
 formAdopcion.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nombre = inputNombreAdoptante.value;
-    const telefono = inputTelefono.value;
+  e.preventDefault();
+  if (!animalSeleccionado) return;
 
-    const animal = await obtenerMascotaPorId(animalSeleccionado);
+  const nombre = inputNombreAdoptante.value;
+  const telefono = inputTelefono.value;
 
-    const fichaAdoptante = {
-        id: animal.id,
-        animalNombre: animal.nombre,
-        especie: animal.especie,
-        solicitante: nombre,
-        telefono,
-        fecha: new Date().toLocaleDateString(),
-    };
+  const animal = await obtenerMascotaPorId(animalSeleccionado);
+  if (!animal) return;
 
-    solicitudes.push(fichaAdoptante);
-    guardarHistorial();
-    renderizarHistorial();
-    cerrarModal();
+  const fichaAdoptante = {
+    id: animal.id,
+    animalNombre: animal.nombre,
+    especie: animal.especie,
+    solicitante: nombre,
+    telefono,
+    fecha: new Date().toLocaleDateString(),
+  };
+
+  solicitudes.push(fichaAdoptante);
+  guardarHistorial();
+  renderizarHistorial();
+  cerrarModal();
+  formAdopcion.reset();
+  animalSeleccionado = null;
 });
 
-btnLimpiarSolicitudes.addEventListener('click', (e) => {
-    limpiarHistorial();
-    renderizarHistorial();
+btnLimpiarSolicitudes.addEventListener('click', () => {
+  limpiarHistorial();
+  renderizarHistorial();
 });
 
-async function init(){
-    mascotas = await obtenerMascotas();
-    especies = await obtenerEspecies();
-    todasMascotas = await mascotas;
-    cargarHistorial();
-    renderizarCatalogo();
-    renderizarSelector();
-    renderizarHistorial();
+async function init() {
+  mascotas = await obtenerMascotas();
+  todasMascotas = mascotas;
+  especies = await obtenerEspecies();
+  cargarHistorial();
+  renderizarCatalogo();
+  renderizarSelector();
+  renderizarHistorial();
 }
 
 init();

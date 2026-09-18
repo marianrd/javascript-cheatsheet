@@ -1,64 +1,61 @@
 // URL de la API
-const API_URL = "http://localhost:3000";
+const API_URL = 'http://localhost:3000';
+const STORAGE_KEY = 'gamehub_favoritos';
 
 // Array de objetos obtenidos a traves de la API
 let videojuegos = [];
+let todosVideojuegos = [];
 let plataformas = [];
 let favoritos = [];
 
 // Consts para el DOM
-const filtroPlataforma = document.getElementById("filtroPlataforma");
-const catalogoGrid  = document.getElementById("catalogoGrid");
-const modalDetalle = document.getElementById("modalDetalle");
-const detalleContent = document.getElementById("detalleContent");
-const favoritosLista = document.getElementById("favoritosLista");
-const btnLimpiarFavoritos = document.getElementById("btnLimpiarFavoritos");
-const ordenarCalificacion = document.getElementById("ordenarCalificacion");
-const cerrarModal = document.querySelectorAll(".cerrar-modal");
+const filtroPlataforma = document.getElementById('filtroPlataforma');
+const catalogoGrid = document.getElementById('catalogoGrid');
+const modalDetalle = document.getElementById('modalDetalle');
+const detalleContent = document.getElementById('detalleContent');
+const favoritosLista = document.getElementById('favoritosLista');
+const btnLimpiarFavoritos = document.getElementById('btnLimpiarFavoritos');
+const ordenarCalificacion = document.getElementById('ordenarCalificacion');
+const cerrarModal = document.querySelectorAll('.cerrar-modal');
 
 // Consumicion de APIs
 async function obtenerVideojuegos() {
-    const response = await fetch(`${API_URL}/api/videojuegos`);   // Pide la respuesta a la API
-    const json = await response.json();                                          // Espera la respuesta y la parsea como JSON
-    return json;
+  try {
+    const response = await fetch(`${API_URL}/api/videojuegos`);
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 async function obtenerPlataformas() {
+  try {
     const response = await fetch(`${API_URL}/api/plataformas`);
-    const json = await response.json();
-    return json;
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 async function obtenerVideojuegoPorId(id) {
+  try {
     const response = await fetch(`${API_URL}/api/videojuegos/${id}`);
-    const json = await response.json();
-    return json;
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
-async function obtenerVideojuegosPorPlataforma(plataforma) {
-    const response = await fetch(`${API_URL}/api/videojuegos?plataforma=${plataforma}`);
-    const json = await response.json();
-    return json;
-}
+function renderizarJuegos() {
+  catalogoGrid.innerHTML = '';
+  videojuegos.forEach((juego) => {
+    const esFavorito = favoritos.some((objeto) => objeto.id === Number(juego.id));
 
-function renderizarJuegos(plataforma) {
-    catalogoGrid.innerHTML = '';
-    videojuegos.forEach(juego => {
-        let plat;
-        if (plataforma) {
-          plat = plataforma;
-        } else {
-          plat = juego.plataforma;
-        }
-        let esFavorito;
-        if (favoritos.length <= 0) {
-          esFavorito = false;
-        } else {
-          esFavorito = favoritos.find((objeto) => objeto.id === Number(juego.id));
-        }
-
-        const entry = document.createElement('div');
-        entry.innerHTML = `
+    const entry = document.createElement('div');
+    entry.innerHTML = `
         <div class="game-card" data-id="${juego.id}">
           <img src="${juego.imagen}" alt="${juego.nombre}" />
           <div class="game-card-body">
@@ -66,7 +63,7 @@ function renderizarJuegos(plataforma) {
             <p class="developer">${juego.desarrollador}</p>
             <div class="meta">
               <div>
-                <span class="badge badge-platform">${plat}</span>
+                <span class="badge badge-platform">${juego.plataforma}</span>
                 <span class="badge badge-genre">${juego.genero}</span>
               </div>
               <div class="rating">
@@ -79,25 +76,29 @@ function renderizarJuegos(plataforma) {
             </div>
           </div>
         </div>`;
-        catalogoGrid.appendChild(entry);
-    });
+    catalogoGrid.appendChild(entry);
+  });
 }
 
 function renderizarFiltro() {
-    plataformas.forEach(plataforma => {
-        const entry = document.createElement('option');
-        entry.value = plataforma.id;
-        entry.textContent = plataforma.nombre;
-        filtroPlataforma.appendChild(entry);
-    })
+  plataformas.forEach((plataforma) => {
+    const entry = document.createElement('option');
+    entry.value = plataforma.id;
+    entry.textContent = plataforma.nombre;
+    filtroPlataforma.appendChild(entry);
+  });
 }
 
 async function renderizarModal(juegoId) {
-    modalDetalle.classList.remove('hidden');
-    detalleContent.innerHTML = '';
-    const juego = await obtenerVideojuegoPorId(juegoId);
-    const entry = document.createElement('div');
-    entry.innerHTML = `
+  modalDetalle.classList.remove('hidden');
+  detalleContent.innerHTML = '';
+  const juego = await obtenerVideojuegoPorId(juegoId);
+  if (!juego) {
+    detalleContent.innerHTML = '<p>No se pudo cargar el videojuego. Intentá nuevamente.</p>';
+    return;
+  }
+  const entry = document.createElement('div');
+  entry.innerHTML = `
     <img src="${juego.imagen}" alt="${juego.nombre}" />
         <h2>${juego.nombre}</h2>
         <div class="detail-meta">
@@ -108,14 +109,14 @@ async function renderizarModal(juegoId) {
         </div>
         <p>${juego.descripcion}</p>
     `;
-    detalleContent.appendChild(entry);
+  detalleContent.appendChild(entry);
 }
 
 function renderizarFavoritos() {
-    favoritosLista.innerHTML = '';
-    favoritos.forEach(fav => {
-        const entry = document.createElement('div');
-        entry.innerHTML = `
+  favoritosLista.innerHTML = '';
+  favoritos.forEach((fav) => {
+    const entry = document.createElement('div');
+    entry.innerHTML = `
         <div class="fav-item">
           <div>
             <span><strong>${fav.nombre}</strong></span>
@@ -126,139 +127,112 @@ function renderizarFavoritos() {
           </button>
         </div>
         `;
-        favoritosLista.appendChild(entry);
-    })
+    favoritosLista.appendChild(entry);
+  });
 }
 
 async function agregarFavorito(id) {
-    const juego = await obtenerVideojuegoPorId(id);
-    const favorito = {
-      id: juego.id,
-      nombre: juego.nombre,
-      plataforma: juego.plataforma,
-      calificacion: juego.calificacion,
-    }
-    if (!buscarFavoritos(id)) {
-        favoritos.push(favorito);
-    } else {
-        eliminarFavorito(id);
-    }
-    guardarFavoritos();
+  if (buscarFavoritos(id)) {
+    eliminarFavorito(id);
+    return;
+  }
+  const juego = await obtenerVideojuegoPorId(id);
+  if (!juego) return;
+  const favorito = {
+    id: juego.id,
+    nombre: juego.nombre,
+    plataforma: juego.plataforma,
+    calificacion: juego.calificacion,
+  };
+  favoritos.push(favorito);
+  guardarFavoritos();
 }
 
 function buscarFavoritos(id) {
-    return favoritos.find(objeto => objeto.id === Number(id));
+  return favoritos.find((objeto) => objeto.id === Number(id));
 }
 
 function eliminarFavorito(id) {
-    if (buscarFavoritos(id)) {
-        favoritos = favoritos.filter(objeto => objeto.id !== Number(id));
-        guardarFavoritos();
-    }
-    renderizarFavoritos();
-    renderizarJuegos();
+  if (buscarFavoritos(id)) {
+    favoritos = favoritos.filter((objeto) => objeto.id !== Number(id));
+    guardarFavoritos();
+  }
 }
 
 function limpiarFavoritos() {
-    favoritos = [];
-    localStorage.removeItem('gamehub_favoritos');
-    renderizarFavoritos();
+  favoritos = [];
+  localStorage.removeItem(STORAGE_KEY);
+  renderizarFavoritos();
+  renderizarJuegos();
 }
 
-filtroPlataforma.addEventListener("change", async (e) => {
-    e.preventDefault();
-    const seleccionado = filtroPlataforma.value;
-    videojuegos = [];
-    videojuegos = await obtenerVideojuegosPorPlataforma(seleccionado);
+function aplicarFiltroYOrden() {
+  const plataformaId = filtroPlataforma.value;
+  const orden = ordenarCalificacion.value;
 
-    renderizarJuegos(seleccionado);
-});
+  const plataformaSeleccionada = plataformas.find((p) => p.id === plataformaId);
+  videojuegos = plataformaSeleccionada
+    ? todosVideojuegos.filter((juego) => juego.plataforma === plataformaSeleccionada.nombre)
+    : todosVideojuegos;
 
-ordenarCalificacion.addEventListener("change", async (e) => {
-    e.preventDefault();
-    const seleccionado = ordenarCalificacion.value;
-    if (seleccionado) {
-        if (seleccionado === 'asc') {
-            videojuegos.sort((a,b) => {
-              if (a.calificacion > b.calificacion) {
-                return 1;
-              }
-              if (a.calificacion < b.calificacion) {
-                return -1;
-              }
-              return 0;
-            })
-        } else {
-          videojuegos.sort((a, b) => {
-            if (a.calificacion < b.calificacion) {
-              return 1;
-            }
-            if (a.calificacion > b.calificacion) {
-              return -1;
-            }
-            return 0;
-          });
-        }
-        renderizarJuegos();
-    } else {
-        videojuegos = await obtenerVideojuegos();
-        renderizarJuegos();
-    }
-});
+  if (orden) {
+    videojuegos = [...videojuegos].sort((a, b) =>
+      orden === 'asc' ? a.calificacion - b.calificacion : b.calificacion - a.calificacion,
+    );
+  }
 
-catalogoGrid.addEventListener("click", async (e) => {
-    const juegoId = e.target.closest('.game-card').dataset.id;
-    if (!e.target.classList.contains('btn-fav') && !e.target.classList.contains('fa-star')) {
-      await renderizarModal(juegoId);
-    } else {
-      await agregarFavorito(juegoId);
-      renderizarJuegos();
-    }
-});
+  renderizarJuegos();
+}
 
-favoritosLista.addEventListener("click", async (e) => {
-    if (!e.target.closest('.btn-quitar-fav')) {
-      return;
-    }
-    const juegoId = e.target.closest('.btn-quitar-fav').dataset.id;
+filtroPlataforma.addEventListener('change', aplicarFiltroYOrden);
+ordenarCalificacion.addEventListener('change', aplicarFiltroYOrden);
 
-    if (e.target.classList.contains('btn-quitar-fav') || e.target.classList.contains('fa-trash')) {
-        eliminarFavorito(juegoId);
-    }
-})
-
-btnLimpiarFavoritos.addEventListener("click", async (e) => {
-    e.preventDefault();
-    limpiarFavoritos();
+catalogoGrid.addEventListener('click', async (e) => {
+  const juegoId = e.target.closest('.game-card').dataset.id;
+  if (!e.target.closest('.btn-fav')) {
+    await renderizarModal(juegoId);
+  } else {
+    await agregarFavorito(juegoId);
+    renderizarFavoritos();
     renderizarJuegos();
+  }
+});
+
+favoritosLista.addEventListener('click', (e) => {
+  const tg = e.target.closest('.btn-quitar-fav');
+  if (!tg) return;
+  eliminarFavorito(tg.dataset.id);
+  renderizarFavoritos();
+  renderizarJuegos();
+});
+
+btnLimpiarFavoritos.addEventListener('click', () => {
+  limpiarFavoritos();
 });
 
 cerrarModal.forEach((botonModal) => {
-    botonModal.addEventListener("click", (e) => {
-        modalDetalle.classList.add("hidden");
-    });
+  botonModal.addEventListener('click', () => {
+    modalDetalle.classList.add('hidden');
+  });
 });
 
 function guardarFavoritos() {
-    localStorage.setItem('gamehub_favoritos', JSON.stringify(favoritos));
-    renderizarFavoritos();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(favoritos));
 }
 
 function cargarFavoritos() {
-    if (!localStorage.getItem('gamehub_favoritos')) {
-      favoritos = [];
-    } else {
-      favoritos = JSON.parse(localStorage.getItem('gamehub_favoritos'));
-    }
+  const raw = localStorage.getItem(STORAGE_KEY);
+  favoritos = raw ? JSON.parse(raw) : [];
 }
 
 async function init() {
-    videojuegos = await obtenerVideojuegos();
-    plataformas = await obtenerPlataformas();
-    cargarFavoritos();
-    renderizarJuegos();
-    renderizarFiltro();
-    renderizarFavoritos();
+  todosVideojuegos = await obtenerVideojuegos();
+  videojuegos = todosVideojuegos;
+  plataformas = await obtenerPlataformas();
+  cargarFavoritos();
+  renderizarJuegos();
+  renderizarFiltro();
+  renderizarFavoritos();
 }
 
 init();
