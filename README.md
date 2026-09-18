@@ -95,16 +95,7 @@ async function obtenerRecurso() {
 - En el `catch`, devolvé un valor "seguro" para el tipo que espera el resto del código (`[]` para listas, `null` para un detalle). Devolver el propio `Error` — como aparece en un caso real abajo — hace que un `productos.forEach(...)` explote si el fetch falla.
 - Si tenés que pedir dos endpoints al arrancar (recurso + catálogo de filtros), `Promise.all([obtenerA(), obtenerB()])` es más rápido que dos `await` secuenciales porque los dispara en paralelo.
 
-**Estado observado en los 4 proyectos** (⚠️ = no cumple literalmente el checklist del issue):
-
-| Proyecto | `try...catch` | Detalle |
-|---|---|---|
-| Cafetería | ✅ | Sí, pero en el `catch` hace `return error` — si el fetch falla, `todosProductos` termina siendo un objeto `Error`, no un arreglo, y el primer `.forEach` de `renderizarProductos()` tira `TypeError`. Mejor devolver `[]`. |
-| Eventos | ⚠️ | Ninguna de las 4 funciones (`obtenerEventos`, `obtenerEventosPorGenero`, `obtenerEventosPorId`, `obtenerGeneros`) tiene `try/catch`, pese a que el issue lo pide explícitamente. Si el server no está levantado, la promesa rechaza sin manejar y corta `init()`. |
-| GameHub | ⚠️ | Mismo caso: las 4 funciones de fetch van sin `try/catch`. |
-| Mascotas | ⚠️ | Mismo caso: `obtenerMascotas`, `obtenerEspecies`, `obtenerMascotaPorId` sin `try/catch`. |
-
-Si vas a reutilizar alguno de estos cuatro como base, vale la pena agregar el `try/catch` que falta antes de dar el issue por cerrado — el checklist del propio issue lo pide.
+**Estado observado en los 4 proyectos:** ✅ las cuatro apps ya tienen `try/catch` en todas sus funciones de fetch, devolviendo un valor seguro (`[]` para listas, `null` para un detalle) en el `catch` en vez de propagar el `Error` — así que ninguna revienta si el backend está caído. Cafetería originalmente hacía `return error` dentro del `catch` (lo que dejaba `todosProductos` como un objeto `Error` en vez de un arreglo, rompiendo el primer `.forEach` de `renderizarProductos()`), y Eventos/GameHub/Mascotas no tenían `try/catch` en absoluto pese a que el issue lo pide explícitamente — quedó corregido en las cuatro.
 
 ---
 
@@ -143,10 +134,12 @@ function renderizarCatalogo() {
 
 | Estrategia | Dónde se usa | Cómo funciona |
 |---|---|---|
-| **Filtrar en el cliente** | Cafetería, Eventos, Mascotas | Se guarda el arreglo completo (`todosProductos`) y en cada evento (`change`/`input`) se hace `.filter()` sobre esa copia y se vuelve a renderizar. |
-| **Re-consultar la API con query param** | GameHub | Al cambiar `#filtroPlataforma`, se llama de nuevo a `fetch(`/api/videojuegos?plataforma=${valor}`)` y se reemplaza `videojuegos` con la respuesta. |
+| **Filtrar en el cliente** | Cafetería, Eventos, GameHub, Mascotas | Se guarda el arreglo completo (`todosProductos`/`todosVideojuegos`/...) y en cada evento (`change`/`input`) se hace `.filter()` sobre esa copia y se vuelve a renderizar. |
+| **Re-consultar la API con query param** | (ninguna de las 4, ver nota) | Al cambiar el filtro, se le pide al backend un subconjunto ya filtrado (`fetch('/api/recurso?campo=valor')`) y se reemplaza el arreglo de trabajo con la respuesta. |
 
-Ambas son correctas; la de filtrar en cliente es más simple y no depende de que el backend soporte ese query param, pero requiere guardar la copia "maestra". La de re-fetch delega el trabajo al backend, a costa de un round-trip extra por cada cambio de filtro.
+Ambas son válidas en teoría, pero **GameHub originalmente usaba la segunda y tenía un bug real por eso**: `/api/videojuegos?plataforma=X` devuelve los juegos de esa plataforma sin el campo `plataforma` (ese campo solo lo agrega el backend en la respuesta "sin filtro"). Como el resto de la UI lee `juego.plataforma` para la placa de la tarjeta, filtrar por plataforma y después togglear un favorito (o cambiar el orden) hacía que la placa mostrara `undefined`. Se corrigió pasando GameHub al mismo patrón "filtrar en cliente" que las otras tres — al pedir siempre el catálogo completo una sola vez, cada juego conserva su `plataforma` sin importar qué filtro esté activo, y de paso se eliminó un segundo bug donde elegir "Sin ordenar" reseteaba el filtro de plataforma (porque volvía a pedir el catálogo completo en vez de reaplicar el filtro vigente).
+
+**Moraleja:** si el backend devuelve un shape distinto según el query param que le mandes, filtrar en el cliente sobre una única respuesta "completa" es más seguro que combinar varias respuestas con forma distinta.
 
 **Pro-tips de filtrado:**
 - Búsqueda de texto: siempre comparar en minúsculas de los dos lados — `texto.toLowerCase().includes(query.toLowerCase())` — si no, `"Rock"` no matchea con `"rock"`.
@@ -160,13 +153,13 @@ Fórmula en las 4 apps: `total = precioUnitario * cantidad`, recalculado en el e
 
 **Pro-tip:** los valores de `<input>` son siempre strings. `precio * cantidadInput.value` funciona igual porque `*` fuerza la coerción numérica automáticamente, pero es frágil: si en algún momento se concatena en vez de multiplicar (`+`), el resultado sale mal (`"10" + 2` → `"102"`, no `12`). Es buena costumbre envolver con `Number(...)` o `parseFloat(...)` apenas se lee el input, así el resto del código no depende de la coerción implícita.
 
-**Estado observado — cosas puntuales para revisar:**
+**Estado observado — ya corregido en las cuatro:**
 
-| Proyecto | Detalle |
+| Proyecto | Qué tenía y cómo quedó |
 |---|---|
-| Cafetería | El listener de `input` en `#cantidadProducto` vuelve a hacer `await obtenerProductoPorId(productoSeleccionado)` (un fetch nuevo) en **cada tecla** para recalcular el total. Al producto ya se lo trajo `abrirModal()`; conviene guardarlo en una variable (`productoSeleccionado` como objeto, no solo el `id`) y reusarlo, en vez de repetir el fetch. |
-| GameHub | El `<select>` de orden (`#ordenarCalificacion`) ordena con un comparador manual de 6 líneas por dirección; se puede simplificar a `videojuegos.sort((a, b) => (asc ? a.calificacion - b.calificacion : b.calificacion - a.calificacion))`. |
-| Mascotas | Declara `const btnAdoptar = document.querySelectorAll('.btn-adoptar')` pero después nunca se usa (la apertura del modal se resuelve por delegación en `catalogoGrid`) — variable muerta, candidato a que ESLint (`no-unused-vars`, configurado como `warn`) se queje. |
+| Cafetería | El listener de `input` en `#cantidadProducto` volvía a hacer `await obtenerProductoPorId(...)` (un fetch nuevo) en **cada tecla** solo para recalcular el total. Ahora `abrirModal()` guarda el producto ya traído en una variable (`productoActual`) y tanto el recálculo como el submit lo reusan sin volver a pedirlo al backend. |
+| GameHub | El `<select>` de orden ordenaba con un comparador manual de 6 líneas por dirección; se simplificó a `videojuegos.sort((a, b) => (asc ? a.calificacion - b.calificacion : b.calificacion - a.calificacion))`. |
+| Mascotas | Declaraba `const btnAdoptar = document.querySelectorAll('.btn-adoptar')` (y Cafetería/Eventos/Mascotas un `btnConfirmar*` equivalente) sin usarlos después — la apertura del modal y el submit ya se resuelven por delegación/evento `submit`. Se eliminaron las cuatro variables muertas. |
 
 ---
 
@@ -198,8 +191,8 @@ function limpiar() {
 **Pro-tips:**
 - `localStorage` solo guarda strings — `JSON.stringify` al guardar, `JSON.parse` al leer, siempre. Guardar un objeto sin `stringify` termina persistiendo el literal `"[object Object]"`.
 - El patrón `raw ? JSON.parse(raw) : []` (usado tal cual en Mascotas) es el más corto para "si no hay nada guardado, arrancá con arreglo vacío" — evita el `if/else` de 4 líneas que aparece en Cafetería/GameHub.
-- Definí la clave como una constante (`STORAGE_KEY`) una sola vez arriba del archivo y reusala en `guardar`/`cargar`/`limpiar`. GameHub es el único de los 4 que no lo hace: escribe el string literal `'gamehub_favoritos'` suelto en `guardarFavoritos`, `cargarFavoritos` y `limpiarFavoritos` — si algún día cambia la clave hay que tocar 3 lugares en vez de 1.
-- Ojo con guardar **solo cuando el arreglo tiene elementos** (`if (pedidos.length > 0) localStorage.setItem(...)`, presente en Cafetería y Mascotas). Mientras la única forma de vaciar la lista sea `limpiarPedidos()` (que llama a `removeItem` directamente) no pasa nada, pero es un patrón frágil: si en el futuro se agrega, por ejemplo, "eliminar un pedido individual" y esa función queda en 0 elementos, el `if` de `guardarPedidos()` nunca vuelve a escribir el `localStorage` vacío y queda desincronizado con el arreglo en memoria. Más seguro: guardar siempre, sin el `if`.
+- Definí la clave como una constante (`STORAGE_KEY`) una sola vez arriba del archivo y reusala en `guardar`/`cargar`/`limpiar`. GameHub originalmente escribía el string literal `'gamehub_favoritos'` suelto en `guardarFavoritos`, `cargarFavoritos` y `limpiarFavoritos` en vez de una constante — quedó unificado en un solo `STORAGE_KEY`.
+- Ojo con guardar **solo cuando el arreglo tiene elementos** (`if (pedidos.length > 0) localStorage.setItem(...)`, como tenían Cafetería y Mascotas). Mientras la única forma de vaciar la lista sea `limpiarPedidos()` (que llama a `removeItem` directamente) no pasa nada, pero es un patrón frágil: si en el futuro se agrega, por ejemplo, "eliminar un pedido individual" y esa función queda en 0 elementos, el `if` de `guardarPedidos()` nunca vuelve a escribir el `localStorage` vacío y queda desincronizado con el arreglo en memoria. Más seguro: guardar siempre, sin el `if` — así quedó en las cuatro apps.
 
 **Estado observado (claves y contenedores):**
 
@@ -238,13 +231,13 @@ Las 4 apps comparten `.eslintrc.json` (`airbnb-base` + `prettier`) y `.prettierr
 
 - **`no-nested-ternary`**: un ternario dentro de otro tira error. Eventos lo necesita para 3 estados de disponibilidad (agotado / últimas entradas / disponible) y lo resuelve con `// eslint-disable-next-line no-nested-ternary` — válido como escape puntual, pero si se repite muy seguido es señal de que conviene una función auxiliar (`function estadoDisponibilidad(tickets) { ... }`) en vez de deshabilitar la regla.
 - **`prefer-const`** (acá configurada como `warn`, no error): declarar con `let` una variable que nunca se reasigna genera warning. Revisar declaraciones de arreglos que se leen pero nunca mutan.
-- **`no-unused-vars`** (`warn`): variables del DOM declaradas "por las dudas" y nunca usadas (como el `btnAdoptar` de Mascotas mencionado arriba) van a aparecer acá.
+- **`no-unused-vars`** (`warn`): variables del DOM declaradas "por las dudas" y nunca usadas (como los `btnAdoptar`/`btnConfirmar*` mencionados arriba) van a aparecer acá. Las cuatro apps corren `npm run lint` limpio (0 errores, 0 warnings) después de sacarlas.
 
 ## 🔍 Referencia rápida cruzada
 
 | | Cafetería | Eventos | GameHub | Mascotas |
 |---|---|---|---|---|
-| Filtro principal | `#filtroCategoria` (categoría) | `#filtroGenero` (género) | `#filtroPlataforma` (plataforma, vía re-fetch) | `#filtroEspecie` (especie) |
+| Filtro principal | `#filtroCategoria` (categoría) | `#filtroGenero` (género) | `#filtroPlataforma` (plataforma) | `#filtroEspecie` (especie) |
 | Búsqueda de texto | `#inputBusqueda` (nombre) | `#inputBusqueda` (nombre + artista) | — (no tiene input de búsqueda) | — (no tiene input de búsqueda) |
 | Cantidad / unidades | `#cantidadProducto` | `#cantidadEntradas` | — (no aplica) | — (no aplica) |
 | Total dinámico | `#precioTotalCalculado` | `#totalPagar` | — (no aplica) | — (no aplica) |
