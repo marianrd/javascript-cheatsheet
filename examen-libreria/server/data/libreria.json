@@ -1,0 +1,202 @@
+{
+  "libros": [
+    {
+      "id": 1,
+      "titulo": "El Eco del Silencio",
+      "autor": "Marina Ibáñez",
+      "categoria": "ficcion",
+      "categoriaNombre": "Ficción",
+      "precio": 8500,
+      "descripcion": "Una novela sobre la memoria y el reencuentro en un pueblo costero que guarda secretos de tres generaciones.",
+      "paginas": 312,
+      "editorial": "Editorial Austral",
+      "anioPublicacion": 2021,
+      "formato": "Tapa blanda",
+      "stock": 14,
+      "imagen": "https://picsum.photos/seed/libro1/600/400"
+    },
+    {
+      "id": 2,
+      "titulo": "Algoritmos en la Vida Cotidiana",
+      "autor": "Ricardo Fuentes",
+      "categoria": "no-ficcion",
+      "categoriaNombre": "No Ficción",
+      "precio": 11200,
+      "descripcion": "Un recorrido ameno por cómo el pensamiento algorítmico puede mejorar decisiones diarias.",
+      "paginas": 248,
+      "editorial": "Planeta Ideas",
+      "anioPublicacion": 2020,
+      "formato": "Tapa dura",
+      "stock": 9,
+      "imagen": "https://picsum.photos/seed/libro2/600/400"
+    },
+    {
+      "id": 3,
+      "titulo": "La Isla de los Números",
+      "autor": "Sofía Larrea",
+      "categoria": "infantil",
+      "categoriaNombre": "Infantil y Juvenil",
+      "precio": 5400,
+      "descripcion": "Una aventura ilustrada para aprender matemática jugando junto a un grupo de piratas curiosos.",
+      "paginas": 64,
+      "editorial": "Cuentos del Sur",
+      "anioPublicacion": 2022,
+      "formato": "Tapa dura",
+      "stock": 20,
+      "imagen": "https://picsum.photos/seed/libro3/600/400"
+    },
+    {
+      "id": 4,
+      "titulo": "Estructuras de Datos Aplicadas",
+      "autor": "Julián Correa",
+      "categoria": "academico",
+      "categoriaNombre": "Académico y Técnico",
+      "precio": 15800,
+      "descripcion": "Manual universitario con ejercicios resueltos sobre árboles, grafos y tablas de hash.",
+      "paginas": 420,
+      "editorial": "Alfaomega",
+      "anioPublicacion": 2019,
+      "formato": "Tapa blanda",
+      "stock": 6,
+      "imagen": "https://picsum.photos/seed/libro4/600/400"
+    },
+    {
+      "id": 5,
+      "titulo": "Donde Nace la Marea",
+      "autor": "Camila Ostrowski",
+      "categoria": "ficcion",
+      "categoriaNombre": "Ficción",
+      "precio": 9300,
+      "descripcion": "Una historia de amor y pérdida ambientada en un faro abandonado de la Patagonia.",
+      "paginas": 356,
+      "editorial": "Sudamericana",
+      "anioPublicacion": 2023,
+      "formato": "Tapa blanda",
+      "stock": 11,
+      "imagen": "https://picsum.photos/seed/libro5/600/400"
+    },
+    {
+      "id": 6,
+      "titulo": "Breve Historia del Café",
+      "autor": "Tomás Aldao",
+      "categoria": "no-ficcion",
+      "categoriaNombre": "No Ficción",
+      "precio": 7600,
+      "descripcion": "Ensayo divulgativo sobre el origen, la ruta comercial y la cultura global del café.",
+      "paginas": 180,
+      "editorial": "Editorial Austral",
+      "anioPublicacion": 2018,
+      "formato": "Tapa blanda",
+      "stock": 17,
+      "imagen": "https://picsum.photos/seed/libro6/600/400"
+    },
+    {
+      "id": 7,
+      "titulo": "El Bosque de los Susurros",
+      "autor": "Valentina Roca",
+      "categoria": "infantil",
+      "categoriaNombre": "Infantil y Juvenil",
+      "precio": 6100,
+      "descripcion": "Un cuento ilustrado sobre la amistad entre una niña y las criaturas de un bosque mágico.",
+      "paginas": 48,
+      "editorial": "Cuentos del Sur",
+      "anioPublicacion": 2021,
+      "formato": "Tapa dura",
+      "stock": 13,
+      "imagen": "https://picsum.photos/seed/libro7/600/400"
+    },
+    {
+      "id": 8,
+      "titulo": "Bases de Datos para Principiantes",
+      "autor": "Nicolás Peretti",
+      "categoria": "academico",
+      "categoriaNombre": "Académico y Técnico",
+      "precio": 13400,
+      "descripcion": "Introducción práctica a modelos relacionales, SQL y normalización con ejemplos reales.",
+      "paginas": 296,
+      "editorial": "Alfaomega",
+      "anioPublicacion": 2022,
+      "formato": "Tapa blanda",
+      "stock": 8,
+      "imagen": "https://picsum.photos/seed/libro8/600/400"
+    },
+    {
+      "id": 9,
+      "titulo": "Cartas que Nunca Envié",
+      "autor": "Marina Ibáñez",
+      "categoria": "ficcion",
+      "categoriaNombre": "Ficción",
+      "precio": 8900,
+      "descripcion": "Una colección de relatos epistolares sobre despedidas, distancias y reencuentros inesperados.",
+      "paginas": 204,
+      "editorial": "Planeta Ideas",
+      "anioPublicacion": 2020,
+      "formato": "Tapa blanda",
+      "stock": 15,
+      "imagen": "https://picsum.photos/seed/libro9/600/400"
+    },
+    {
+      "id": 10,
+      "titulo": "Mentes que Deciden",
+      "autor": "Estela Vargas",
+      "categoria": "no-ficcion",
+      "categoriaNombre": "No Ficción",
+      "precio": 12500,
+      "descripcion": "Un estudio accesible sobre los sesgos cognitivos que influyen en nuestras decisiones diarias.",
+      "paginas": 272,
+      "editorial": "Sudamericana",
+      "anioPublicacion": 2023,
+      "formato": "Tapa dura",
+      "stock": 10,
+      "imagen": "https://picsum.photos/seed/libro10/600/400"
+    },
+    {
+      "id": 11,
+      "titulo": "El Robot Curioso",
+      "autor": "Diego Salcedo",
+      "categoria": "infantil",
+      "categoriaNombre": "Infantil y Juvenil",
+      "precio": 5900,
+      "descripcion": "Un robot pequeño descubre el mundo y aprende sobre las emociones junto a sus nuevos amigos.",
+      "paginas": 52,
+      "editorial": "Cuentos del Sur",
+      "anioPublicacion": 2023,
+      "formato": "Tapa dura",
+      "stock": 18,
+      "imagen": "https://picsum.photos/seed/libro11/600/400"
+    },
+    {
+      "id": 12,
+      "titulo": "Redes y Protocolos Modernos",
+      "autor": "Julián Correa",
+      "categoria": "academico",
+      "categoriaNombre": "Académico y Técnico",
+      "precio": 16700,
+      "descripcion": "Guía técnica actualizada sobre arquitectura de redes, protocolos TCP/IP y seguridad básica.",
+      "paginas": 384,
+      "editorial": "Alfaomega",
+      "anioPublicacion": 2021,
+      "formato": "Tapa blanda",
+      "stock": 5,
+      "imagen": "https://picsum.photos/seed/libro12/600/400"
+    }
+  ],
+  "categorias": [
+    {
+      "id": "ficcion",
+      "nombre": "Ficción"
+    },
+    {
+      "id": "no-ficcion",
+      "nombre": "No Ficción"
+    },
+    {
+      "id": "infantil",
+      "nombre": "Infantil y Juvenil"
+    },
+    {
+      "id": "academico",
+      "nombre": "Académico y Técnico"
+    }
+  ]
+}

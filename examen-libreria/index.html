@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página Suelta - Examen de práctica JS</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <div class="libreria-container">
+      <header>
+        <h1>📚 Página Suelta</h1>
+        <p class="subtitle">Librería online de ficción, no ficción, infantil y académico</p>
+      </header>
+
+      <section class="filters">
+        <select id="filtroCategoria" class="filter-select">
+          <option value="">Todas las categorías</option>
+        </select>
+      </section>
+
+      <section class="catalog">
+        <!--
+          Plantilla de tarjeta de libro (.libro-card) para #catalogoGrid.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          libro del catálogo. Mapeo de categoria -> clase del badge:
+            ficcion     -> cat-ficcion
+            no-ficcion  -> cat-no-ficcion
+            infantil    -> cat-infantil
+            academico   -> cat-academico
+
+          <div class="libro-card" data-id="${libro.id}">
+            <div class="card-image-wrap">
+              <img src="${libro.imagen}" alt="${libro.titulo}" class="card-image" />
+              <span class="card-cat-badge cat-${claseCategoria}">${libro.categoriaNombre}</span>
+              <span class="card-price-badge">$${libro.precio}</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">${libro.titulo}</h3>
+              <p class="card-autor"><i class="fas fa-feather"></i> ${libro.autor}</p>
+              <p class="card-description">${libro.descripcion}</p>
+              <div class="card-tags">
+                <span class="tag">${libro.formato}</span>
+                <span class="tag">${libro.editorial}</span>
+              </div>
+              <button type="button" class="btn-primary btn-ordenar" data-id="${libro.id}">
+                <i class="fas fa-cart-plus"></i> Encargar Libro
+              </button>
+            </div>
+          </div>
+
+          Si no hay libros (por ejemplo tras filtrar sin resultados):
+
+          <p class="empty-state">No se encontraron libros.</p>
+        -->
+        <div id="catalogoGrid" class="cards-grid"></div>
+      </section>
+
+      <!-- Modal Detalle y Pedido -->
+      <div id="modalDetalle" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>📖 Detalle y Pedido</h3>
+            <button type="button" class="cerrar-modal">&times;</button>
+          </div>
+
+          <!--
+            <div class="detail-header-info" data-id="${libro.id}" data-precio-base="${libro.precio}">
+              <img src="${libro.imagen}" alt="${libro.titulo}" class="detail-img" />
+              <div>
+                <span class="card-cat-badge cat-${claseCategoria}">${libro.categoriaNombre}</span>
+                <h3 class="card-title">${libro.titulo}</h3>
+                <p class="card-autor"><i class="fas fa-feather"></i> ${libro.autor}</p>
+                <div class="detail-meta-grid">
+                  <div class="detail-meta-item"><strong>Precio:</strong> $${libro.precio}</div>
+                  <div class="detail-meta-item"><strong>Páginas:</strong> ${libro.paginas}</div>
+                  <div class="detail-meta-item"><strong>Editorial:</strong> ${libro.editorial}</div>
+                  <div class="detail-meta-item"><strong>Año:</strong> ${libro.anioPublicacion}</div>
+                </div>
+              </div>
+            </div>
+            <p class="card-description">${libro.descripcion}</p>
+          -->
+          <div id="detalleContent" class="detail-body"></div>
+
+          <form id="formPedido" class="order-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cantidadLibro">Cantidad de Ejemplares</label>
+                <input
+                  type="number"
+                  id="cantidadLibro"
+                  name="cantidad"
+                  min="1"
+                  max="5"
+                  value="1"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="inputCliente">Nombre del Cliente</label>
+                <input
+                  type="text"
+                  id="inputCliente"
+                  name="cliente"
+                  required
+                  placeholder="Ej: Marcos Pérez"
+                />
+              </div>
+            </div>
+
+            <div class="total-bar">
+              <span>Total a Pagar:</span>
+              <strong id="precioTotalCalculado">$0</strong>
+            </div>
+
+            <button type="submit" id="btnConfirmarPedido" class="btn-primary">
+              <i class="fas fa-check-circle"></i> Confirmar Pedido
+            </button>
+          </form>
+          <button type="button" class="btn-cerrar cerrar-modal">Cerrar</button>
+        </div>
+      </div>
+
+      <!-- Sección Historial de Pedidos -->
+      <section class="pedidos-section">
+        <div class="pedidos-header">
+          <h2><i class="fas fa-receipt"></i> Pedidos Registrados</h2>
+          <button type="button" id="btnLimpiarPedidos" class="btn-outline">
+            <i class="fas fa-trash"></i> Limpiar Historial
+          </button>
+        </div>
+
+        <!--
+          Plantilla de pedido (.pedido-card) para #pedidosLista.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          pedido guardado en localStorage bajo la clave 'libreria_pedidos'.
+
+          <div class="pedido-card">
+            <div class="pedido-info">
+              <h4>${pedido.libroTitulo} x${pedido.cantidad}</h4>
+              <p>${pedido.cliente} · ${new Date(pedido.fecha).toLocaleString()}</p>
+            </div>
+            <div class="pedido-total">$${pedido.total}</div>
+          </div>
+
+          Si no hay pedidos registrados:
+
+          <p class="empty-state">Todavía no registraste ningún pedido.</p>
+        -->
+        <div id="pedidosLista" class="pedidos-list"></div>
+      </section>
+    </div>
+
+    <script type="module" src="js/script.js"></script>
+  </body>
+</html>
