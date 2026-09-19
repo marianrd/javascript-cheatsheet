@@ -183,6 +183,66 @@ function renderizar() {
 
 ---
 
+## 11. Una función de "guardar" con condiciones que no deberían estar ahí
+
+**Síntoma:** guardás algo, después lo vaciás/eliminás, y `localStorage` se queda con datos viejos que ya no existen en memoria.
+
+**Causa:** la función de guardado tiene un `if` de más, tipo `if (datos.length > 0) { localStorage.setItem(...) }`. La intención parece razonable ("no guardar si no hay nada"), pero en realidad hace lo contrario de lo que se necesita: si el array pasa a estar vacío, esa condición impide que `localStorage` se actualice para reflejar el vacío.
+
+```js
+// mal: no persiste cuando el array queda en []
+function guardar() {
+    if (datos.length > 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+    }
+}
+
+// bien: siempre refleja el estado actual, sea cual sea
+function guardar() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+}
+```
+
+**Chequeo rápido:** una función que persiste estado no debería tener lógica condicional sobre *cuándo* guardar — solo debería reflejar fielmente lo que hay en memoria en ese momento. `JSON.stringify([])` es válido y es exactamente lo que querés guardar cuando el array está vacío.
+
+---
+
+## 12. Pedir por `fetch` un dato que ya tenés
+
+**Síntoma:** cada vez que el usuario interactúa con algo (tipea una cantidad, confirma un formulario), el Network tab muestra un request nuevo pidiendo el mismo recurso que ya se había pedido segundos antes.
+
+**Causa:** en vez de guardar el resultado de un `fetch` anterior en una variable, se lo vuelve a pedir a la API cada vez que se lo necesita — por ejemplo, volver a hacer `obtenerLibroPorId(id)` dentro del cálculo del total Y de nuevo dentro del `submit`, cuando ese mismo libro ya se había traído al abrir el modal.
+
+```js
+// mal: refetchea el mismo libro en cada evento
+async function calcularPrecio() {
+    const libro = await obtenerLibroPorId(idAbierto);
+    total.textContent = `$${libro.precio * cantidad.value}`;
+}
+
+// bien: se guarda una vez, al abrir, y se reutiliza
+let itemActual = null;
+
+async function abrirModal(id) {
+    itemActual = await obtenerLibroPorId(id);
+    // ...
+}
+
+function calcularPrecio() {
+    total.textContent = `$${itemActual.precio * cantidad.value}`;
+}
+```
+
+**Chequeo rápido:** si dos funciones distintas necesitan el mismo dato que viene de un `fetch`, guardalo en una variable a nivel de módulo cuando lo obtengas la primera vez, y que las demás lean esa variable en vez de volver a pedirlo. Reservá el `fetch` repetido para cuando el dato realmente puede haber cambiado en el servidor.
+
+---
+
+## Nota personal — repetir errores ya documentados
+
+Varios de los bugs de arriba (el alias de array del punto 9, la condición de más del punto 11, los empty states del punto 10) **ya estaban escritos en este mismo documento** cuando los volví a cometer en el examen siguiente. Tenerlos documentados no alcanza si no los reviso activamente antes de decir "terminé" — por eso el checklist de abajo está pensado para repasarse **a propósito**, línea por línea, contra el código real, no de memoria.
+
+---
+
 ## Checklist rápido antes de decir "está terminado"
 
 - [ ] ¿Toda función `async` que llamo tiene `await` delante?
@@ -193,3 +253,6 @@ function renderizar() {
 - [ ] ¿Toda función que modifica estado persistente también escribe en `localStorage`, usando siempre la misma constante de clave?
 - [ ] ¿Alguna variable es sin querer un alias de otra (`b = a`) que después mutás con `sort`/`push`/`splice`?
 - [ ] ¿Contemplé el caso de lista vacía en cada render?
+- [ ] ¿Alguna función de guardado tiene un `if` que le impide persistir cuando el estado queda vacío?
+- [ ] ¿Estoy re-pidiendo por `fetch` un dato que ya obtuve antes y podría guardar en una variable?
+- [ ] ¿Corrí `npm run lint` **y** `npm run format:check` (no solo uno de los dos)?
