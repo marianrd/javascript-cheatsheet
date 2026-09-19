@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vivienda Ideal - Examen de práctica JS</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <div class="inmobiliaria-container">
+      <header>
+        <h1>🏠 Vivienda Ideal</h1>
+        <p class="subtitle">Casas, departamentos, PH y locales en venta y alquiler en CABA y GBA</p>
+      </header>
+
+      <section class="filters">
+        <select id="filtroTipo" class="filter-select">
+          <option value="">Todos los tipos</option>
+        </select>
+        <select id="ordenarPrecio" class="filter-select">
+          <option value="">Sin ordenar</option>
+          <option value="asc">Menor a mayor precio</option>
+          <option value="desc">Mayor a menor precio</option>
+        </select>
+      </section>
+
+      <section class="catalog">
+        <!--
+          Plantilla de tarjeta de propiedad (.propiedad-card) para #catalogoGrid.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          propiedad del catálogo. Mapeo de tipo -> clase del badge:
+            casa          -> badge-casa
+            departamento  -> badge-departamento
+            ph            -> badge-ph
+            local         -> badge-local
+
+          <div class="propiedad-card" data-id="${propiedad.id}">
+            <div class="card-image-wrap">
+              <img src="${propiedad.imagen}" alt="${propiedad.titulo}" class="card-image" />
+              <span class="card-tipo-badge badge-${propiedad.tipo}">${propiedad.tipoNombre}</span>
+              <span class="card-price-badge">${propiedad.moneda} ${propiedad.precio}</span>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">${propiedad.titulo}</h3>
+              <p class="card-ubicacion"><i class="fas fa-map-marker-alt"></i> ${propiedad.barrio}, ${propiedad.ciudad}</p>
+              <div class="meta">
+                <div class="meta-info">
+                  <span><i class="fas fa-door-open"></i> ${propiedad.ambientes} amb.</span>
+                  <span><i class="fas fa-bath"></i> ${propiedad.banios}</span>
+                  <span><i class="fas fa-ruler-combined"></i> ${propiedad.superficieM2}m²</span>
+                </div>
+                <button type="button" class="btn-fav ${esFavorito ? 'active' : ''}" data-id="${propiedad.id}" title="Favorito">
+                  <i class="${esFavorito ? 'fas' : 'far'} fa-star"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          Si no hay propiedades (por ejemplo tras filtrar sin resultados):
+
+          <p class="empty-state">No se encontraron propiedades.</p>
+        -->
+        <div id="catalogoGrid" class="properties-grid"></div>
+      </section>
+
+      <!-- Modal Detalle -->
+      <div id="modalDetalle" class="modal hidden">
+        <div class="modal-content modal-large">
+          <div class="modal-header">
+            <h3>🏠 Detalle de la Propiedad</h3>
+            <button type="button" class="cerrar-modal">&times;</button>
+          </div>
+
+          <!--
+            <img src="${propiedad.imagen}" alt="${propiedad.titulo}" />
+            <h2>${propiedad.titulo}</h2>
+            <div class="detail-meta">
+              <span class="badge badge-tipo badge-${propiedad.tipo}">${propiedad.tipoNombre}</span>
+              <span class="badge">${propiedad.operacion}</span>
+              <span class="badge"><i class="fas fa-tag" style="color:var(--star)"></i> ${propiedad.moneda} ${propiedad.precio}</span>
+            </div>
+            <div class="detail-meta-grid">
+              <div class="detail-meta-item"><strong>Ambientes:</strong> ${propiedad.ambientes}</div>
+              <div class="detail-meta-item"><strong>Baños:</strong> ${propiedad.banios}</div>
+              <div class="detail-meta-item"><strong>Superficie:</strong> ${propiedad.superficieM2}m²</div>
+              <div class="detail-meta-item"><strong>Ubicación:</strong> ${propiedad.barrio}, ${propiedad.ciudad}</div>
+            </div>
+            <p>${propiedad.descripcion}</p>
+            <div class="card-tags">
+              ${propiedad.caracteristicas.map(c => `<span class="tag">${c}</span>`).join('')}
+            </div>
+          -->
+
+          <div id="detalleContent" class="detail-body"></div>
+          <button type="button" class="btn-cerrar cerrar-modal">Cerrar</button>
+        </div>
+      </div>
+
+      <!-- Sección Favoritos -->
+      <section class="favorites-section">
+        <div class="favorites-header">
+          <h2><i class="fas fa-star"></i> Mis Propiedades Guardadas</h2>
+          <button type="button" id="btnLimpiarFavoritos" class="btn-outline">
+            <i class="fas fa-trash"></i> Limpiar
+          </button>
+        </div>
+
+        <!--
+          Plantilla de favorito guardado (.fav-item) para #favoritosLista.
+          Copiar dentro de un template literal en js/script.js, uno por cada
+          propiedad guardada en localStorage bajo la clave 'inmobiliaria_favoritos'.
+
+          <div class="fav-item">
+            <div>
+              <span><strong>${fav.titulo}</strong></span>
+              <span class="fav-ubicacion"> &bull; ${fav.barrio} &bull; ${fav.moneda} ${fav.precio}</span>
+            </div>
+            <button type="button" class="btn-outline btn-quitar-fav" data-id="${fav.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+
+          Si no hay favoritos guardados:
+
+          <p class="empty-state">Todavía no guardaste ninguna propiedad.</p>
+        -->
+        <div id="favoritosLista" class="favorites-list"></div>
+      </section>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
